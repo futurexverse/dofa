@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/x-icon" href="favicon.jpg">
+    <title>Payment Selection | Tesla Inventory</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "primary-container": "#e82127",
+                        "surface-container-low": "#1b1b1b",
+                        "tertiary": "#c7c6c6",
+                        "secondary": "#c8c6c5",
+                        "on-surface-variant": "#e7bdb8",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#ffdad6",
+                        "on-surface": "#e2e2e2",
+                        "on-secondary": "#313030",
+                        "tertiary-fixed-dim": "#c7c6c6",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-secondary-container": "#b7b4b4",
+                        "on-primary-container": "#140000",
+                        "tertiary-container": "#919090",
+                        "surface-tint": "#ffb4ac",
+                        "on-primary-fixed-variant": "#93000e",
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary": "#690007",
+                        "outline-variant": "#5d3f3c",
+                        "on-background": "#e2e2e2",
+                        "inverse-surface": "#e2e2e2",
+                        "surface-dim": "#131313",
+                        "on-error": "#690005",
+                        "inverse-primary": "#c00015",
+                        "primary-fixed-dim": "#ffb4ac",
+                        "inverse-on-surface": "#303030",
+                        "background": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-bright": "#393939",
+                        "surface": "#131313",
+                        "on-tertiary-container": "#292a2a",
+                        "on-tertiary-fixed-variant": "#464747",
+                        "secondary-fixed": "#e5e2e1",
+                        "tertiary-fixed": "#e3e2e2",
+                        "on-primary-fixed": "#410002",
+                        "surface-variant": "#353535",
+                        "outline": "#ae8884",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "on-tertiary": "#303031",
+                        "primary": "#ffb4ac",
+                        "surface-container-highest": "#353535",
+                        "error": "#ffb4ab",
+                        "surface-container": "#1f1f1f",
+                        "secondary-container": "#474746"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #131313;
+            color: #e2e2e2;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface font-body antialiased">
+    <!-- TopAppBar -->
+    <header class="bg-[#131313] docked full-width top-0 z-50 sticky">
+        <div class="flex justify-between items-center w-full px-6 h-16 bg-surface-container-low">
+            <div class="flex items-center gap-4">
+                <a href="design.html1.html"
+                    class="material-symbols-outlined text-[#e82127] scale-95 transition-transform duration-200 hover:bg-[#2a2a2a] p-2">chevron_left</a>
+                <h1 class="font-['Manrope'] tracking-[-0.02em] uppercase font-bold text-on-surface">PAYMENT</h1>
+            </div>
+            <div class="flex items-center">
+                <span
+                    class="material-symbols-outlined text-[#e82127] scale-95 transition-transform duration-200 hover:bg-[#2a2a2a]">help_outline</span>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-6 pt-16 pb-32">
+        <!-- Hero Section -->
+        <section class="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
+            <div class="max-w-2xl">
+                <div class="h-1 w-12 bg-primary-container mb-6"></div>
+                <h2 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tight mb-4 uppercase">SELECT
+                    PAYMENT METHOD</h2>
+                <p class="font-body text-on-surface-variant text-lg max-w-md leading-relaxed">
+                    Secure your configuration with our encrypted payment gateway. Select your preferred high-precision
+                    transaction method below.
+                </p>
+            </div>
+            <div class="hidden md:block">
+                <div class="bg-surface-container-highest p-8 border-l-4 border-primary-container">
+                    <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-1">Status</p>
+                    <p class="font-headline font-bold text-xl uppercase italic">Secure Connection Active</p>
+                </div>
+            </div>
+        </section>
+        <!-- Payment Options Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-variant/20 mb-32">
+            <!-- Option 1: Cash App -->
+            <div
+                class="bg-surface p-10 flex flex-col justify-between aspect-square group hover:bg-surface-bright transition-colors duration-300 cursor-pointer relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span class="material-symbols-outlined text-primary text-sm">arrow_forward_ios</span>
+                </div>
+                <div class="mb-8">
+                    <span class="material-symbols-outlined text-primary-container text-5xl"
+                        style="font-variation-settings: 'wght' 200;">payments</span>
+                </div>
+                <div>
+                    <h3 class="font-headline font-bold text-2xl mb-1">Cash App</h3>
+                    <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Instant
+                        Settlement</p>
+                </div>
+            </div>
+            <!-- Option 2: PayPal -->
+            <div
+                class="bg-surface p-10 flex flex-col justify-between aspect-square group hover:bg-surface-bright transition-colors duration-300 cursor-pointer relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span class="material-symbols-outlined text-primary text-sm">arrow_forward_ios</span>
+                </div>
+                <div class="mb-8">
+                    <span class="material-symbols-outlined text-primary-container text-5xl"
+                        style="font-variation-settings: 'wght' 200;">account_balance_wallet</span>
+                </div>
+                <div>
+                    <h3 class="font-headline font-bold text-2xl mb-1">PayPal</h3>
+                    <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Buyer Protected
+                    </p>
+                </div>
+            </div>
+            <!-- Option 3: Crypto -->
+            <div
+                class="bg-surface p-10 flex flex-col justify-between aspect-square group hover:bg-surface-bright transition-colors duration-300 cursor-pointer relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span class="material-symbols-outlined text-primary text-sm">arrow_forward_ios</span>
+                </div>
+                <div class="mb-8">
+                    <span class="material-symbols-outlined text-primary-container text-5xl"
+                        style="font-variation-settings: 'wght' 200;">currency_bitcoin</span>
+                </div>
+                <div>
+                    <h3 class="font-headline font-bold text-2xl mb-1">Crypto</h3>
+                    <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Decentralized
+                        Asset</p>
+                </div>
+            </div>
+            <!-- Option 4: Bank Transfer -->
+            <div
+                class="bg-surface p-10 flex flex-col justify-between aspect-square group hover:bg-surface-bright transition-colors duration-300 cursor-pointer relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span class="material-symbols-outlined text-primary text-sm">arrow_forward_ios</span>
+                </div>
+                <div class="mb-8">
+                    <span class="material-symbols-outlined text-primary-container text-5xl"
+                        style="font-variation-settings: 'wght' 200;">account_balance</span>
+                </div>
+                <div>
+                    <h3 class="font-headline font-bold text-2xl mb-1">Bank Transfer</h3>
+                    <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Direct Wire
+                        Transfer</p>
+                </div>
+            </div>
+        </section>
+        <!-- Instructions Section (Bento Inspired Layout) -->
+        <section class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <div class="md:col-span-8 bg-surface-container-low p-12 relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
+                <div class="relative z-10">
+                    <h2 class="font-headline text-3xl font-extrabold mb-6 uppercase tracking-tight">START PAYMENT
+                        PROCESS</h2>
+                    <p class="font-body text-xl text-on-surface mb-8 leading-relaxed max-w-2xl">
+                        To finalize your vehicle reservation and secure your <span
+                            class="text-primary-container font-bold">giveaway pricing</span>, please contact our support
+                        team.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                        <a class="group/link" href="mailto:teslainventorytexas@outlook.com">
+                            <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">
+                                Primary Contact</p>
+                            <p
+                                class="font-headline font-black text-xl md:text-2xl text-on-surface border-b border-primary-container/30 group-hover/link:border-primary-container transition-colors">
+                                teslainventorytexas@outlook.com</p>
+                        </a>
+                        <div class="h-12 w-px bg-outline-variant/30 hidden sm:block"></div>
+                        <div class="flex items-center gap-3 bg-surface-container-high px-6 py-4">
+                            <div class="w-2 h-2 bg-primary-container animate-pulse"></div>
+                            <span class="font-label text-xs uppercase tracking-widest font-semibold">Live Support</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Decorative Monolith Background element -->
+                <div class="absolute -right-20 -bottom-20 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <span class="material-symbols-outlined text-[300px]"
+                        style="font-variation-settings: 'wght' 100;">shield</span>
+                </div>
+            </div>
+            <div class="md:col-span-4 flex flex-col gap-8">
+                <div class="bg-surface-container-highest p-8 h-full flex flex-col justify-center">
+                    <p class="font-headline font-bold text-lg mb-4 text-primary">RESERVATION TERMS</p>
+                    <p class="font-body text-sm text-on-surface-variant leading-relaxed">
+                        Completion of this step places a temporary hold on the VIN. Final delivery date will be
+                        confirmed upon successful payment verification.
+                    </p>
+                </div>
+                <div
+                    class="bg-primary-container p-8 h-full flex flex-col justify-between group cursor-pointer hover:bg-primary transition-colors">
+                    <p
+                        class="font-headline font-black text-on-primary-container text-2xl uppercase italic leading-none">
+                        Complete Order</p>
+                    <span
+                        class="material-symbols-outlined text-on-primary-container text-4xl self-end">arrow_right_alt</span>
+                </div>
+            </div>
+        </section>
+        <!-- Visual Anchor: Product Showcase -->
+        <section class="mt-32">
+            <div class="relative h-[400px] w-full overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10">
+                </div>
+                <img alt="tesla dashboard detail"
+                    class="w-full h-full object-cover grayscale opacity-40 transition-transform duration-700"
+                    data-alt="dramatic close-up of a modern electric vehicle steering wheel and minimalist dashboard in a dark studio setting with sharp red accents"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0NQiSgR_WSTEN7DJ2Lgv30h5T_IqJqE7tBIWQWeqHn9n8Qi1QaQTO9Hz4ran814oI_ZEEkMSobAi_j1xCFq1_GgUv1yFJm1TUo4KNfqhy_Lm2gVc4UElUEdLfKq7wp_-ueEIW8vbcKs3MqvnSfFsNBE7TYZT9_EQJDDnezpU9iEK_lRe3ODmjmBUswzwPVLA04oZQV1Iu6zvtCUMfJ-NE-RDVs77g6w-dHfzShuYkoJ1vBcU2eW2naNkCBnLQ809Jz1rjenjtF3rN" />
+                <div class="absolute inset-0 flex items-center justify-center z-20">
+                    <div class="text-center">
+                        <p class="font-label text-xs uppercase tracking-[0.4em] text-primary mb-2">Automotive
+                            Engineering</p>
+                        <h3 class="font-headline font-black text-4xl uppercase tracking-widest">KINETIC PRECISION</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- BottomNavBar -->
+    <nav class="bg-[#0e0e0e] fixed bottom-0 w-full z-50 border-0 h-20 pb-safe md:hidden">
+        <div class="flex justify-around items-center w-full h-full">
+            <button
+                class="flex flex-col items-center justify-center text-[#e7bdb8] opacity-60 pt-2 hover:bg-[#353535] hover:opacity-100 ease-in-out duration-300">
+                <span class="material-symbols-outlined">home</span>
+                <span class="font-['Inter'] text-[10px] uppercase tracking-[0.1em] font-semibold">Home</span>
+            </button>
+            <button
+                class="flex flex-col items-center justify-center text-[#e7bdb8] opacity-60 pt-2 hover:bg-[#353535] hover:opacity-100 ease-in-out duration-300">
+                <span class="material-symbols-outlined">directions_car</span>
+                <span class="font-['Inter'] text-[10px] uppercase tracking-[0.1em] font-semibold">Vehicle</span>
+            </button>
+            <button
+                class="flex flex-col items-center justify-center text-[#ffb4ac] border-t-2 border-[#e82127] pt-2 hover:bg-[#353535] hover:opacity-100 ease-in-out duration-300">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="font-['Inter'] text-[10px] uppercase tracking-[0.1em] font-semibold">Wallet</span>
+            </button>
+            <button
+                class="flex flex-col items-center justify-center text-[#e7bdb8] opacity-60 pt-2 hover:bg-[#353535] hover:opacity-100 ease-in-out duration-300">
+                <span class="material-symbols-outlined">person</span>
+                <span class="font-['Inter'] text-[10px] uppercase tracking-[0.1em] font-semibold">Profile</span>
+            </button>
+        </div>
+    </nav>
+    <!-- Desktop Navigation Side Anchor -->
+    <div
+        class="hidden md:fixed left-0 top-0 h-full w-24 bg-surface-container-lowest flex flex-col items-center py-12 justify-between z-40 border-r border-outline-variant/10">
+        <div class="font-black text-2xl tracking-tighter text-on-surface">T</div>
+        <div class="flex flex-col gap-12">
+            <span
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">dashboard</span>
+            <span class="material-symbols-outlined text-primary transition-colors cursor-pointer"
+                style="font-variation-settings: 'FILL' 1;">payments</span>
+            <span
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">settings</span>
+        </div>
+        <div class="h-12 w-px bg-outline-variant/20"></div>
+    </div>
+</body>
+
+</html>

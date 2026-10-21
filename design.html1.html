@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/x-icon" href="favicon.jpg">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e2e2e2",
+                        "tertiary-fixed": "#e3e2e2",
+                        "tertiary-container": "#919090",
+                        "outline": "#ae8884",
+                        "on-primary-fixed": "#410002",
+                        "on-tertiary": "#303031",
+                        "on-surface": "#e2e2e2",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#e7bdb8",
+                        "surface-tint": "#ffb4ac",
+                        "outline-variant": "#5d3f3c",
+                        "inverse-on-surface": "#303030",
+                        "surface-container-high": "#2a2a2a",
+                        "error": "#ffb4ab",
+                        "secondary-fixed": "#e5e2e1",
+                        "surface-dim": "#131313",
+                        "primary-fixed-dim": "#ffb4ac",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#353535",
+                        "on-primary-fixed-variant": "#93000e",
+                        "on-tertiary-fixed-variant": "#464747",
+                        "primary": "#ffb4ac",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-secondary-container": "#b7b4b4",
+                        "on-primary": "#690007",
+                        "primary-fixed": "#ffdad6",
+                        "tertiary-fixed-dim": "#c7c6c6",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-secondary": "#313030",
+                        "on-background": "#e2e2e2",
+                        "on-tertiary-container": "#292a2a",
+                        "on-primary-container": "#140000",
+                        "secondary-container": "#474746",
+                        "tertiary": "#c7c6c6",
+                        "surface-bright": "#393939",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#353535",
+                        "secondary": "#c8c6c5",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "surface": "#131313",
+                        "inverse-primary": "#c00015",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container": "#1f1f1f",
+                        "primary-container": "#e82127",
+                        "background": "#131313",
+                        "surface-container-low": "#1b1b1b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #131313;
+            color: #e2e2e2;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+    <!-- Top Navigation Anchor -->
+    <header class="flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50 bg-[#131313]">
+                <a href="index.html" class="text-2xl font-bold tracking-tighter text-[#e2e2e2] font-headline uppercase">KINETIC</a>
+        <nav class="hidden md:flex gap-8">
+            <a class="text-[#e2e2e2] font-bold font-headline text-sm tracking-widest uppercase" href="#">EXTERIOR</a>
+            <a class="text-[#e7bdb8] font-headline text-sm tracking-widest uppercase hover:text-[#e2e2e2] transition-colors duration-300"
+                href="#">INTERIOR</a>
+            <a class="text-[#e7bdb8] font-headline text-sm tracking-widest uppercase hover:text-[#e2e2e2] transition-colors duration-300"
+                href="#">SPECS</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <a href="vehicles.html" class="material-symbols-outlined text-[#e2e2e2] cursor-pointer hover:bg-[#2a2a2a] p-2 transition-colors">arrow_back</a>
+            <span
+                class="material-symbols-outlined text-[#e2e2e2] cursor-pointer hover:bg-[#2a2a2a] p-2 transition-colors">shopping_bag</span>
+        </div>
+    </header>
+    <main class="min-h-screen pt-24 pb-48">
+        <div class="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <!-- Left Canvas: Visual Representation -->
+            <section class="lg:col-span-8 flex flex-col items-center justify-center relative">
+                <!-- Vehicle Display -->
+                <div class="w-full aspect-video flex items-center justify-center">
+                    <img id="vehicle-image" class="w-full h-full object-contain transition-opacity duration-500"
+                        alt="Model S side profile"
+                        src="models.jpg" />
+                </div>
+                <!-- HUD Telemetry Labels -->
+                <div class="w-full grid grid-cols-3 gap-4 mt-8 px-12 border-t border-outline-variant/15 pt-8">
+                    <div class="text-center">
+                        <div class="font-headline font-bold text-2xl text-on-surface">396<span
+                                class="text-xs ml-1 font-normal opacity-60">mi</span></div>
+                        <div class="font-label text-[10px] tracking-[0.2em] text-on-surface-variant uppercase">Range
+                            (est.)</div>
+                    </div>
+                    <div class="text-center border-x border-outline-variant/15">
+                        <div class="font-headline font-bold text-2xl text-on-surface">1.99<span
+                                class="text-xs ml-1 font-normal opacity-60">s</span></div>
+                        <div class="font-label text-[10px] tracking-[0.2em] text-on-surface-variant uppercase">0-60 mph
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-headline font-bold text-2xl text-on-surface">200<span
+                                class="text-xs ml-1 font-normal opacity-60">mph</span></div>
+                        <div class="font-label text-[10px] tracking-[0.2em] text-on-surface-variant uppercase">Top Speed
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Right Canvas: Configuration -->
+            <section class="lg:col-span-4 space-y-12">
+                <!-- Header -->
+                <div class="space-y-2">
+                    <h1 class="font-headline text-5xl font-extrabold tracking-tighter text-on-surface">Model S</h1>
+                    <p class="font-label text-sm tracking-widest text-primary font-bold uppercase transition-all duration-300" id="selection-summary">Plaid Performance</p>
+                </div>
+                <!-- Paint Selection -->
+                <div class="space-y-6">
+                    <h3 class="font-headline text-xs font-bold tracking-[0.3em] uppercase text-on-surface-variant">Paint
+                    </h3>
+                    <div class="flex gap-4" id="paint-buttons">
+                        <button onclick="selectPaint(this, 'Obsidian Black Metallic')"
+                            class="paint-btn w-10 h-10 rounded-full bg-[#050505] ring-2 ring-offset-4 ring-offset-surface ring-primary transition-all duration-300"></button>
+                        <button onclick="selectPaint(this, 'Pearl White Multi-Coat')"
+                            class="paint-btn w-10 h-10 rounded-full bg-[#f0f0f0] ring-1 ring-outline-variant/30 hover:ring-2 hover:ring-primary transition-all duration-300"></button>
+                        <button onclick="selectPaint(this, 'Deep Blue Metallic')"
+                            class="paint-btn w-10 h-10 rounded-full bg-[#1b2b4e] ring-1 ring-outline-variant/30 hover:ring-2 hover:ring-primary transition-all duration-300"></button>
+                        <button onclick="selectPaint(this, 'Stealth Grey')"
+                            class="paint-btn w-10 h-10 rounded-full bg-[#3d3d3d] ring-1 ring-outline-variant/30 hover:ring-2 hover:ring-primary transition-all duration-300"></button>
+                        <button onclick="selectPaint(this, 'Ultra Red')"
+                            class="paint-btn w-10 h-10 rounded-full bg-[#e82127] ring-1 ring-outline-variant/30 hover:ring-2 hover:ring-primary transition-all duration-300"></button>
+                    </div>
+                    <p id="paint-label" class="font-body text-sm text-on-surface-variant">Deep Blue Metallic Included</p>
+                </div>
+                <!-- Wheels Selection -->
+                <div class="space-y-6">
+                    <h3 class="font-headline text-xs font-bold tracking-[0.3em] uppercase text-on-surface-variant">
+                        Wheels</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div onclick="selectWheels(this, '19&quot; Tempest')" id="wheel-btn-1" class="wheel-btn bg-surface-container-high p-4 cursor-pointer border-t-2 border-primary transition-all duration-300">
+                            <div class="h-32 mb-4 overflow-hidden">
+                                <img class="w-full h-full object-cover opacity-80"
+                                    alt="19 inch electric car wheel"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzYhZmLr-RfY_Aji2P3WZjtrysNSDYvY_xR0r9K78pZYb-FbghClWePwpTROmnrnLxlmAuo7XxuBtXnSn0mkM0Nu4HtyckHtnkQWaaGXkzaX6vY_TQJD92v-ZVCZek0AJdX6bZwiQ0YfNpgIEUBbvnUx2vtwb4iLyClPp-88GdF_Cf0zgsw5ErqJwuzGcQGMbRq0HCE11LcXzQzOcUWMzwxlKf-g3ZeSqwoyrz-dTnuLy4yXxk0iGMt8-voxLaR_ueLDmSfR6y9BGd" />
+                            </div>
+                            <span class="font-label text-[10px] tracking-widest uppercase font-bold text-on-surface">19"
+                                Tempest</span>
+                        </div>
+                        <div onclick="selectWheels(this, '21&quot; Arachnid')" id="wheel-btn-2"
+                            class="wheel-btn bg-surface-container-low p-4 cursor-pointer hover:bg-surface-container-high border-t-2 border-transparent transition-all duration-300">
+                            <div class="h-32 mb-4 overflow-hidden">
+                                <img class="w-full h-full object-cover opacity-80"
+                                    alt="21 inch electric car wheel"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2Uw1gPoYo0XhjkgFDXmHm4EOIynE9dvgr0rC6IWPYWKRuOR5bwCKYlFeppQQmJW3RvMDo8RmYLW5s-LguapXi3BpxTpP4LX1JFWcWrx0v5Yosfx13NpvJX7QC4XxHaD1OGDpDCPzfGpVqG100OK4SNXcoCt6P54tsWu5l0JtB3JY8yhom-jHXJrNzz26xrOrmsPyTZ6o8PILf4xG0-aIIQGL9mpdYg9d_D0QirxiVyy-DzXzf8Z-Uauhi1LXA9B37M0jB5DiUcxfX" />
+                            </div>
+                            <span
+                                class="font-label text-[10px] tracking-widest uppercase font-bold text-on-surface-variant">21"
+                                Arachnid</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Interior Selection -->
+                <div class="space-y-6">
+                    <h3 class="font-headline text-xs font-bold tracking-[0.3em] uppercase text-on-surface-variant">
+                        Interior</h3>
+                    <div class="flex gap-4" id="interior-buttons">
+                        <button onclick="selectInterior(this, 'All Black')"
+                            class="interior-btn flex-1 py-3 bg-surface-container-high border-t-2 border-primary font-label text-[10px] font-bold tracking-widest uppercase transition-all duration-300">All
+                            Black</button>
+                        <button onclick="selectInterior(this, 'White')"
+                            class="interior-btn flex-1 py-3 bg-surface-container-low hover:bg-surface-container-high border-t-2 border-transparent font-label text-[10px] font-bold tracking-widest uppercase text-on-surface-variant transition-all duration-300">White</button>
+                        <button onclick="selectInterior(this, 'Cream')"
+                            class="interior-btn flex-1 py-3 bg-surface-container-low hover:bg-surface-container-high border-t-2 border-transparent font-label text-[10px] font-bold tracking-widest uppercase text-on-surface-variant transition-all duration-300">Cream</button>
+                    </div>
+                </div>
+                <!-- Feature High-Tech HUD Style Card -->
+                <div class="bg-surface-container-lowest p-6 border-l border-primary-container">
+                    <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined text-primary text-xl">bolt</span>
+                        <div class="space-y-1">
+                            <h4 class="font-headline text-xs font-bold uppercase tracking-widest">Enhanced Autopilot
+                            </h4>
+                            <p class="font-body text-xs text-on-surface-variant leading-relaxed">Navigate on Autopilot,
+                                Auto Lane Change, Autopark, and Summon.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Persistent Bottom Bar Execution -->
+    <footer class="fixed bottom-0 left-0 w-full z-50 bg-[#0e0e0e]/80 backdrop-blur-xl px-4 py-6 border-t border-outline-variant/10">
+        <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex flex-col">
+                <span class="font-label text-[10px] tracking-[0.3em] text-on-surface-variant uppercase mb-1">Total
+                    Configuration</span>
+                <div class="flex items-baseline gap-3">
+                    <span class="font-headline text-3xl font-extrabold text-[#E82127]">$104,990</span>
+                </div>
+            </div>
+            <div class="flex gap-8 md:gap-16 items-center">
+                <div class="hidden sm:flex flex-col items-center">
+                    <span class="material-symbols-outlined text-primary mb-1">palette</span>
+                    <span
+                        class="font-label text-[10px] uppercase tracking-widest font-bold text-[#ffb4ac]">EXTERIOR</span>
+                </div>
+                <div class="hidden sm:flex flex-col items-center opacity-60">
+                    <span class="material-symbols-outlined text-on-surface-variant mb-1">event_seat</span>
+                    <span
+                        class="font-label text-[10px] uppercase tracking-widest font-bold text-[#e7bdb8]">INTERIOR</span>
+                </div>
+                <div class="hidden sm:flex flex-col items-center opacity-60">
+                    <span class="material-symbols-outlined text-on-surface-variant mb-1">speed</span>
+                    <span class="font-label text-[10px] uppercase tracking-widest font-bold text-[#e7bdb8]">SPECS</span>
+                </div>
+                <button onclick="addToCart()"
+                    class="bg-primary-container text-on-primary-container px-12 py-4 font-headline text-sm font-bold tracking-[0.2em] uppercase hover:bg-primary transition-all duration-300">
+                    ADD TO CART
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function selectPaint(btn, name) {
+            document.querySelectorAll('.paint-btn').forEach(b => {
+                b.classList.remove('ring-2', 'ring-offset-4', 'ring-primary');
+                b.classList.add('ring-1', 'ring-outline-variant/30');
+            });
+            btn.classList.add('ring-2', 'ring-offset-4', 'ring-primary');
+            btn.classList.remove('ring-1', 'ring-outline-variant/30');
+            document.getElementById('paint-label').innerText = name + ' Included';
+            updateSummary();
+        }
+
+        function selectWheels(btn, name) {
+            document.querySelectorAll('.wheel-btn').forEach(b => {
+                b.classList.remove('border-primary', 'bg-surface-container-high');
+                b.classList.add('border-transparent', 'bg-surface-container-low');
+                b.querySelector('span').classList.remove('text-on-surface');
+                b.querySelector('span').classList.add('text-on-surface-variant');
+            });
+            btn.classList.add('border-primary', 'bg-surface-container-high');
+            btn.classList.remove('border-transparent', 'bg-surface-container-low');
+            btn.querySelector('span').classList.add('text-on-surface');
+            btn.querySelector('span').classList.remove('text-on-surface-variant');
+            updateSummary();
+        }
+
+        function selectInterior(btn, name) {
+            document.querySelectorAll('.interior-btn').forEach(b => {
+                b.classList.remove('border-primary', 'bg-surface-container-high');
+                b.classList.add('border-transparent', 'bg-surface-container-low', 'text-on-surface-variant');
+            });
+            btn.classList.add('border-primary', 'bg-surface-container-high');
+            btn.classList.remove('border-transparent', 'bg-surface-container-low', 'text-on-surface-variant');
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('selection-summary');
+            summary.style.opacity = '0';
+            setTimeout(() => {
+                summary.style.opacity = '1';
+                summary.innerText = 'Configuration Updated';
+                setTimeout(() => {
+                    summary.innerText = 'Plaid Performance';
+                }, 2000);
+            }, 3000);
+        }
+
+        function addToCart() {
+            const paintEl = document.getElementById('paint-label');
+            const color = paintEl ? paintEl.innerText.replace(/\s*Included$/i, '').trim() : 'Deep Blue Metallic';
+            const wheelBtn = document.querySelector('.wheel-btn.border-primary');
+            const wheels = wheelBtn ? (wheelBtn.querySelector('span') ? wheelBtn.querySelector('span').innerText.trim() : '19" Tempest') : '19" Tempest';
+            const interiorBtn = document.querySelector('.interior-btn.border-primary');
+            const interior = interiorBtn ? interiorBtn.innerText.replace(/\s+/g, ' ').trim() : 'All Black';
+
+            const cartItem = {
+                name: "Model S",
+                price: 104990,
+                originalPrice: 104990,
+                image: "models.jpg",
+                variant: "Plaid Performance",
+                color: color,
+                wheels: wheels,
+                interior: interior,
+                addedAt: new Date().toISOString()
+            };
+
+            if (window.KineticCloud && typeof window.KineticCloud.setCart === 'function') {
+                window.KineticCloud.setCart(cartItem);
+            } else {
+                localStorage.setItem('kineticCart', JSON.stringify(cartItem));
+            }
+            window.location.href = 'orders.html';
+        }
+    </script>
+    <script src="cloud-sync.js"></script>
+</body>
+</html>

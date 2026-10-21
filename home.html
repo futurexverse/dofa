@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/x-icon" href="favicon.jpg">
+    <title>Tesla Roadster — Pure Electric Performance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@600;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <style>
+        .font-roadster {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .font-tesla-logo {
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: 0.6em;
+        }
+
+        /* Mouse Scroll Indicator Animation */
+        @keyframes mouseScroll {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+
+        .scroll-dot-anim {
+            animation: mouseScroll 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        /* Ambient Glow Behind Center Stage */
+        .ambient-red-glow {
+            box-shadow: 0 0 120px 40px rgba(230, 20, 30, 0.25);
+        }
+
+        /* Subtle Fade In */
+        @keyframes heroFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-fade-in {
+            animation: heroFadeIn 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body class="bg-black text-white font-['Inter'] antialiased overflow-x-hidden selection:bg-red-600 selection:text-white min-h-screen relative flex flex-col justify-between pb-0 lg:pb-20">
+
+    <!-- Desktop Background Hero Visual (Desktop Only) -->
+    <div class="hidden lg:block fixed inset-0 z-0 overflow-hidden pointer-events-none select-none">
+        <img src="tesla_roadster_hero.jpg" alt="Tesla Roadster" class="w-full h-full object-cover object-center scale-[1.02] filter brightness-95" />
+        
+        <!-- Subtle Cinematic Lighting Vignette Overlays -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/35 to-black/75"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/80"></div>
+        <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/80 to-transparent"></div>
+    </div>
+
+    <!-- ==================== TOP NAVIGATION (DESKTOP) ==================== -->
+    <header class="hidden lg:flex relative z-30 w-full px-6 sm:px-12 py-5 sm:py-6 items-center justify-between">
+        <!-- Tesla Brand Wordmark -->
+        <a href="home.html" class="flex items-center gap-2 group">
+            <span class="font-tesla-logo text-sm sm:text-base font-extrabold uppercase text-white tracking-[0.55em] group-hover:text-red-500 transition-colors">
+                TESLA
+            </span>
+        </a>
+
+        <!-- Center Quick Links (Desktop) -->
+        <nav class="hidden lg:flex items-center gap-8 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+            <a href="design.html1.html" class="hover:text-white hover:tracking-[0.25em] transition-all">Model S</a>
+            <a href="design.html2.html" class="hover:text-white hover:tracking-[0.25em] transition-all">Model 3</a>
+            <a href="model_x.html" class="hover:text-white hover:tracking-[0.25em] transition-all">Model X</a>
+            <a href="model_y.html" class="hover:text-white hover:tracking-[0.25em] transition-all">Model Y</a>
+            <a href="cybertruck.html" class="hover:text-white hover:tracking-[0.25em] transition-all">Cybertruck</a>
+            <a href="home.html" class="text-red-500 font-bold border-b border-red-500 pb-0.5">Roadster</a>
+        </nav>
+
+        <!-- Right Action Items -->
+        <div class="flex items-center gap-4 sm:gap-5">
+            <!-- Active User / Profile Badge -->
+            <a href="profile.html" id="user-badge" class="hidden sm:flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-full transition-all backdrop-blur-md">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="nav-user-name">Tesla ID</span>
+            </a>
+
+            <!-- Orders Shortcut -->
+            <a href="orders.html" class="text-white/80 hover:text-white p-2 transition-colors relative" title="View Orders">
+                <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                <span id="nav-cart-dot" class="hidden absolute top-2 right-2 w-2 h-2 rounded-full bg-red-600"></span>
+            </a>
+
+            <!-- Hamburger Menu Button -->
+            <button id="menu-btn" onclick="toggleMenu()" class="text-white hover:text-red-500 transition-colors p-2 focus:outline-none" aria-label="Toggle navigation menu">
+                <div class="w-6 h-5 flex flex-col justify-between items-end">
+                    <span class="w-6 h-0.5 bg-white transition-all duration-300" id="burger-line-1"></span>
+                    <span class="w-4 h-0.5 bg-white transition-all duration-300" id="burger-line-2"></span>
+                    <span class="w-5 h-0.5 bg-white transition-all duration-300" id="burger-line-3"></span>
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN HERO CONTENT (DESKTOP) ==================== -->
+    <main class="hidden lg:flex relative z-20 flex-1 flex-col justify-center px-6 sm:px-12 md:px-16 lg:px-20 py-6 sm:py-8">
+        <div class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Left Hero Title & Description -->
+            <div class="lg:col-span-6 xl:col-span-5 hero-fade-in text-center sm:text-left">
+                <h1 class="font-roadster text-5xl sm:text-7xl md:text-8xl xl:text-9xl font-bold uppercase tracking-wide text-white leading-none drop-shadow-2xl">
+                    TESLA ROADSTER
+                </h1>
+                
+                <p class="text-white/75 font-['Inter'] text-xs sm:text-sm md:text-base font-light tracking-wide max-w-md mx-auto sm:mx-0 leading-relaxed mt-3 sm:mt-4 drop-shadow">
+                    The quickest car in the world, with record setting acceleration, range and performance.
+                </p>
+
+                <!-- Action Button -->
+                <div class="mt-6 sm:mt-8 flex items-center justify-center sm:justify-start gap-4">
+                    <button onclick="reserveRoadster()" class="group relative px-8 sm:px-9 py-3 sm:py-3.5 bg-black/40 hover:bg-red-950/40 border border-red-700/80 hover:border-red-500 text-white font-['Inter'] text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_0_25px_rgba(230,20,30,0.25)] hover:shadow-[0_0_35px_rgba(230,20,30,0.5)] active:scale-95">
+                        <span class="relative z-10 flex items-center gap-2">
+                            <span>Reserve now</span>
+                            <span class="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1 text-red-500">arrow_forward</span>
+                        </span>
+                    </button>
+                    
+                    <a href="vehicles.html" class="px-5 sm:px-6 py-3 sm:py-3.5 text-white/60 hover:text-white font-['Inter'] text-xs font-semibold tracking-[0.2em] uppercase transition-colors">
+                        Explore All Models
+                    </a>
+                </div>
+            </div>
+
+            <!-- Center Spacer (Hero Car lives in the background) -->
+            <div class="hidden lg:block lg:col-span-4 xl:col-span-5"></div>
+
+            <!-- Right Vertical Model Selector -->
+            <div class="hidden md:flex lg:col-span-2 flex-col items-end gap-6 text-right select-none pr-2">
+                <a href="design.html1.html" class="group text-xs font-bold uppercase tracking-[0.25em] text-white/50 hover:text-white transition-all flex items-center gap-3">
+                    <span class="opacity-0 group-hover:opacity-100 text-red-500 transition-opacity text-[10px]">●</span>
+                    <span>MODEL S</span>
+                </a>
+                <a href="model_x.html" class="group text-xs font-bold uppercase tracking-[0.25em] text-white/50 hover:text-white transition-all flex items-center gap-3">
+                    <span class="opacity-0 group-hover:opacity-100 text-red-500 transition-opacity text-[10px]">●</span>
+                    <span>MODEL X</span>
+                </a>
+                <a href="design.html2.html" class="group text-xs font-bold uppercase tracking-[0.25em] text-white/50 hover:text-white transition-all flex items-center gap-3">
+                    <span class="opacity-0 group-hover:opacity-100 text-red-500 transition-opacity text-[10px]">●</span>
+                    <span>MODEL 3</span>
+                </a>
+                <a href="model_y.html" class="group text-xs font-bold uppercase tracking-[0.25em] text-white/50 hover:text-white transition-all flex items-center gap-3">
+                    <span class="opacity-0 group-hover:opacity-100 text-red-500 transition-opacity text-[10px]">●</span>
+                    <span>MODEL Y</span>
+                </a>
+                <!-- Active Item: ROADSTER -->
+                <div class="text-xs font-black uppercase tracking-[0.25em] text-red-600 drop-shadow-[0_0_12px_rgba(230,20,30,0.8)] flex items-center gap-3 cursor-default">
+                    <span class="text-red-500 text-[10px] animate-pulse">●</span>
+                    <span>ROADSTER</span>
+                </div>
+                <a href="cybertruck.html" class="group text-xs font-bold uppercase tracking-[0.25em] text-white/50 hover:text-white transition-all flex items-center gap-3">
+                    <span class="opacity-0 group-hover:opacity-100 text-red-500 transition-opacity text-[10px]">●</span>
+                    <span>CYBERTRUCK</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==================== BOTTOM PERFORMANCE SPECS (DESKTOP) ==================== -->
+    <div class="hidden lg:flex relative z-20 w-full px-6 sm:px-12 py-4 sm:py-6 flex-col items-center gap-4">
+        
+        <!-- 3 Performance Metrics (Matches uploaded design) -->
+        <div class="flex items-center justify-center gap-8 sm:gap-16 md:gap-24 text-center">
+            <!-- Metric 1: Top Speed -->
+            <div class="flex flex-col items-center">
+                <div class="flex items-baseline font-roadster text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide">
+                    <span>+250</span>
+                    <span class="text-xs sm:text-sm font-['Inter'] font-semibold tracking-wider text-white/80 ml-1.5 uppercase">MPH</span>
+                </div>
+                <span class="text-[10px] sm:text-xs font-['Inter'] uppercase tracking-[0.2em] text-white/50 font-medium mt-0.5">
+                    Top Speed
+                </span>
+            </div>
+
+            <!-- Metric 2: Acceleration -->
+            <div class="flex flex-col items-center">
+                <div class="flex items-baseline font-roadster text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide">
+                    <span>1.9</span>
+                    <span class="text-xs sm:text-sm font-['Inter'] font-semibold tracking-wider text-white/80 ml-1.5 lowercase">s</span>
+                </div>
+                <span class="text-[10px] sm:text-xs font-['Inter'] uppercase tracking-[0.2em] text-white/50 font-medium mt-0.5">
+                    0-60 mph
+                </span>
+            </div>
+
+            <!-- Metric 3: Range -->
+            <div class="flex flex-col items-center">
+                <div class="flex items-baseline font-roadster text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide">
+                    <span>620</span>
+                    <span class="text-xs sm:text-sm font-['Inter'] font-semibold tracking-wider text-white/80 ml-1.5 uppercase">MI</span>
+                </div>
+                <span class="text-[10px] sm:text-xs font-['Inter'] uppercase tracking-[0.2em] text-white/50 font-medium mt-0.5">
+                    Mile Range
+                </span>
+            </div>
+        </div>
+
+        <!-- Mouse Scroll Wheel Icon (Desktop Only) -->
+        <div class="flex flex-col items-center pt-1">
+            <div class="w-5 h-8 rounded-full border-2 border-white/40 flex justify-center p-1.5 shadow-sm">
+                <div class="w-1 h-2 bg-white rounded-full scroll-dot-anim"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MOBILE VIEW ONLY (FULL SCREEN - NO BORDERS) ==================== -->
+    <section class="block lg:hidden relative z-20 w-full bg-black pb-20 sm:pb-24 overflow-x-hidden">
+        <div class="w-full relative select-none">
+            <!-- Full graphic image stretching edge-to-edge with no borders -->
+            <img src="roadster_mobile_fullscreen.png" alt="Tesla Roadster" class="w-full h-auto block select-none pointer-events-none" />
+
+            <!-- Interactive Hotspot Overlays -->
+            <!-- 1. Tesla Logo (Top-Left) -->
+            <a href="home.html" class="absolute z-30 left-[1%] top-[0.5%] w-[18%] h-[6.5%] rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/50" title="Tesla Home" aria-label="Tesla Home"></a>
+
+            <!-- 2. Hamburger Menu (Top-Right) -->
+            <button type="button" onclick="toggleMenu()" ontouchend="toggleMenu(); event.preventDefault();" class="absolute z-30 left-[82%] top-[0.5%] w-[18%] h-[6.5%] rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 cursor-pointer touch-manipulation" title="Open Navigation Menu" aria-label="Open Navigation Menu"></button>
+
+            <!-- 3. Interior Video Card -->
+            <a href="vehicles.html" class="absolute z-30 left-[0%] top-[70%] w-[49%] h-[14%] rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 active:scale-95 transition-transform" title="View Roadster Interior" aria-label="View Roadster Interior"></a>
+
+            <!-- 4. Specs Card -->
+            <a href="vehicles.html" class="absolute z-30 left-[51%] top-[70%] w-[49%] h-[14%] rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 active:scale-95 transition-transform" title="View Roadster Specifications" aria-label="View Roadster Specifications"></a>
+
+            <!-- 5. RESERVE NOW Button (High-Priority Clickable Target on All Devices) -->
+            <button type="button" onclick="reserveRoadster()" ontouchend="reserveRoadster(); event.preventDefault();" class="absolute z-30 left-[3%] top-[93%] w-[94%] h-[6.8%] rounded-full cursor-pointer focus:outline-none focus:ring-4 focus:ring-red-500/80 active:scale-95 transition-all shadow-xl hover:brightness-125 touch-manipulation" title="Reserve Tesla Roadster" aria-label="Reserve Tesla Roadster"></button>
+        </div>
+    </section>
+
+    <!-- ==================== FIXED BOTTOM NAVIGATION BAR (MATCHES USER IMAGE) ==================== -->
+    <nav class="fixed bottom-0 left-0 w-full z-40 bg-[#111111]/95 backdrop-blur-xl border-t border-white/10 flex justify-around items-center h-16 sm:h-20 px-3 sm:px-6 shadow-[0_-10px_35px_rgba(0,0,0,0.85)]">
+        <!-- Home (Active) -->
+        <a href="home.html" class="flex flex-col items-center justify-center text-red-500 drop-shadow-[0_0_12px_rgba(230,20,30,0.9)] active:scale-90 transition-transform">
+            <span class="material-symbols-outlined text-xl sm:text-2xl" style="font-variation-settings: 'FILL' 1;">home</span>
+            <span class="font-['Inter'] text-[9px] sm:text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Home</span>
+        </a>
+
+        <!-- Models -->
+        <a href="vehicles.html" class="flex flex-col items-center justify-center text-[#e8bdb6]/70 hover:text-white active:scale-90 transition-colors">
+            <span class="material-symbols-outlined text-xl sm:text-2xl">directions_car</span>
+            <span class="font-['Inter'] text-[9px] sm:text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Models</span>
+        </a>
+
+        <!-- Search -->
+        <a href="search.html" class="flex flex-col items-center justify-center text-[#e8bdb6]/70 hover:text-white active:scale-90 transition-colors">
+            <span class="material-symbols-outlined text-xl sm:text-2xl">search</span>
+            <span class="font-['Inter'] text-[9px] sm:text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Search</span>
+        </a>
+
+        <!-- Orders -->
+        <a href="orders.html" class="flex flex-col items-center justify-center text-[#e8bdb6]/70 hover:text-white active:scale-90 transition-colors relative">
+            <span class="material-symbols-outlined text-xl sm:text-2xl">receipt_long</span>
+            <span class="font-['Inter'] text-[9px] sm:text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Orders</span>
+            <span id="bottom-nav-cart-dot" class="hidden absolute -top-1 right-2 w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+        </a>
+
+        <!-- Profile -->
+        <a href="profile.html" class="flex flex-col items-center justify-center text-[#e8bdb6]/70 hover:text-white active:scale-90 transition-colors">
+            <span class="material-symbols-outlined text-xl sm:text-2xl">person</span>
+            <span class="font-['Inter'] text-[9px] sm:text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Profile</span>
+        </a>
+    </nav>
+
+    <!-- ==================== SLIDE-OVER SIDE MENU ==================== -->
+    <div id="side-menu-backdrop" onclick="toggleMenu()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    
+    <aside id="side-menu" class="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[#0c0c0c]/95 border-l border-white/10 z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-8 flex flex-col justify-between shadow-2xl backdrop-blur-xl">
+        <div>
+            <!-- Header inside drawer -->
+            <div class="flex items-center justify-between pb-6 border-b border-white/10">
+                <span class="font-tesla-logo text-xs font-extrabold uppercase tracking-[0.4em] text-white">TESLA</span>
+                <button onclick="toggleMenu()" class="text-white/60 hover:text-white p-1" aria-label="Close menu">
+                    <span class="material-symbols-outlined text-2xl">close</span>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="mt-8 space-y-4">
+                <a href="vehicles.html" class="flex items-center justify-between text-sm font-bold uppercase tracking-[0.2em] text-white/80 hover:text-white py-2 border-b border-white/5 transition-colors">
+                    <span>All Vehicles</span>
+                    <span class="material-symbols-outlined text-sm text-red-500">arrow_forward</span>
+                </a>
+                <a href="design.html1.html" class="block text-sm font-medium uppercase tracking-[0.2em] text-white/60 hover:text-white py-1.5 transition-colors">
+                    Model S
+                </a>
+                <a href="design.html2.html" class="block text-sm font-medium uppercase tracking-[0.2em] text-white/60 hover:text-white py-1.5 transition-colors">
+                    Model 3
+                </a>
+                <a href="model_x.html" class="block text-sm font-medium uppercase tracking-[0.2em] text-white/60 hover:text-white py-1.5 transition-colors">
+                    Model X
+                </a>
+                <a href="model_y.html" class="block text-sm font-medium uppercase tracking-[0.2em] text-white/60 hover:text-white py-1.5 transition-colors">
+                    Model Y
+                </a>
+                <a href="cybertruck.html" class="block text-sm font-medium uppercase tracking-[0.2em] text-white/60 hover:text-white py-1.5 transition-colors">
+                    Cybertruck
+                </a>
+                <a href="home.html" class="block text-sm font-bold uppercase tracking-[0.2em] text-red-500 py-1.5">
+                    Tesla Roadster
+                </a>
+                <a href="orders.html" class="flex items-center justify-between text-sm font-bold uppercase tracking-[0.2em] text-white/80 hover:text-white py-2 border-t border-white/5 transition-colors mt-6">
+                    <span>Orders & Deliveries</span>
+                    <span class="material-symbols-outlined text-sm text-primary">local_shipping</span>
+                </a>
+                <a href="profile.html" class="flex items-center justify-between text-sm font-bold uppercase tracking-[0.2em] text-white/80 hover:text-white py-2 transition-colors">
+                    <span>Account Profile</span>
+                    <span class="material-symbols-outlined text-sm">person</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Footer inside drawer -->
+        <div class="pt-6 border-t border-white/10">
+            <div id="drawer-user-info" class="text-xs text-white/60 font-mono mb-4">
+                Signed in as <span id="drawer-user-email" class="text-white font-bold block truncate">Guest</span>
+            </div>
+            <button onclick="handleAuthAction()" id="drawer-auth-btn" class="w-full py-3 text-center bg-white/10 hover:bg-white/20 text-white font-headline text-xs font-bold uppercase tracking-[0.2em] transition-colors border border-white/10">
+                Log Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Cloud Sync Script -->
+    <script src="cloud-sync.js"></script>
+
+    <!-- Home Logic Script -->
+    <script>
+        // Toggle slide-out menu
+        function toggleMenu() {
+            const sideMenu = document.getElementById('side-menu');
+            const backdrop = document.getElementById('side-menu-backdrop');
+            const isClosed = sideMenu.classList.contains('translate-x-full');
+
+            if (isClosed) {
+                sideMenu.classList.remove('translate-x-full');
+                backdrop.classList.remove('opacity-0', 'pointer-events-none');
+                backdrop.classList.add('opacity-100');
+            } else {
+                sideMenu.classList.add('translate-x-full');
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
+                backdrop.classList.remove('opacity-100');
+            }
+        }
+
+        // Reserve Roadster action -> sets cart & navigates to delivery registration
+        function reserveRoadster() {
+            const roadsterCartItem = {
+                name: "Tesla Roadster",
+                variant: "Founders Series • SpaceX Thrusters",
+                price: "$200,000",
+                originalPrice: "$250,000",
+                image: "tesla_roadster_hero.jpg",
+                color: "Solid Red",
+                wheels: "Roadster Sport Performance",
+                interior: "Carbon Fiber & Plaid",
+                addedAt: new Date().toISOString()
+            };
+
+            if (window.KineticCloud && typeof window.KineticCloud.setCart === 'function') {
+                window.KineticCloud.setCart(roadsterCartItem);
+            } else {
+                localStorage.setItem('kineticCart', JSON.stringify(roadsterCartItem));
+            }
+
+            window.location.href = 'orders.html';
+        }
+
+        // Authentication state
+        function handleAuthAction() {
+            if (window.KineticCloud) {
+                window.KineticCloud.logout();
+            } else {
+                localStorage.removeItem('kinetic_user_email');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Update active user display on load
+        window.addEventListener('load', () => {
+            const userEmail = localStorage.getItem('kinetic_user_email');
+            const userName = localStorage.getItem('kinetic_user_name');
+            const userBadge = document.getElementById('user-badge');
+            const navUserName = document.getElementById('nav-user-name');
+            const drawerUserEmail = document.getElementById('drawer-user-email');
+            const drawerAuthBtn = document.getElementById('drawer-auth-btn');
+            const cartDot = document.getElementById('nav-cart-dot');
+            const bottomCartDot = document.getElementById('bottom-nav-cart-dot');
+
+            if (userEmail) {
+                if (userBadge) userBadge.classList.remove('hidden');
+                if (navUserName) navUserName.textContent = userName || userEmail.split('@')[0];
+                if (drawerUserEmail) drawerUserEmail.textContent = userEmail;
+                if (drawerAuthBtn) drawerAuthBtn.textContent = 'Log Out';
+            } else {
+                if (userBadge) userBadge.classList.add('hidden');
+                if (drawerUserEmail) drawerUserEmail.textContent = 'Guest Visitor';
+                if (drawerAuthBtn) {
+                    drawerAuthBtn.textContent = 'Sign In';
+                    drawerAuthBtn.onclick = () => window.location.href = 'login.html';
+                }
+            }
+
+            // Check if cart has vehicle
+            const cart = localStorage.getItem('kineticCart');
+            if (cart && cart !== 'null' && cart !== '{}') {
+                if (cartDot) cartDot.classList.remove('hidden');
+                if (bottomCartDot) bottomCartDot.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

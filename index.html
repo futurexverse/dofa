@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/x-icon" href="favicon.jpg">
+    <title>Tesla - Splash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@800&display=swap" rel="stylesheet" />
+    <style>
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: scale(0.95); }
+            20% { opacity: 1; transform: scale(1); }
+            80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.05); }
+        }
+
+        .splash-content {
+            animation: fadeInOut 3s ease-in-out forwards;
+        }
+
+        body {
+            background-color: #000000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .tesla-logo {
+            width: 120px;
+            filter: brightness(0) invert(1);
+            margin-bottom: 2rem;
+        }
+
+        .tesla-text {
+            font-family: 'Manrope', sans-serif;
+            color: #ffffff;
+            letter-spacing: 0.8em;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-right: -0.8em; /* Offset for the last letter spacing */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="splash-content flex flex-col items-center">
+        <!-- Tesla T Logo -->
+        <img src="tesla-logo.png" alt="Tesla Logo" class="tesla-logo">
+        
+        <!-- Tesla Text -->
+        <div class="tesla-text">TESLA</div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 3000);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link rel="icon" type="image/x-icon" href="favicon.jpg">
+<title>TESLA - Sign Up</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#2a2a2a",
+                    "on-tertiary-fixed": "#1b1c1c",
+                    "error-container": "#93000a",
+                    "surface": "#131313",
+                    "on-tertiary-fixed-variant": "#464747",
+                    "on-background": "#e2e2e2",
+                    "on-error": "#690005",
+                    "primary-fixed-dim": "#ffb4ac",
+                    "background": "#131313",
+                    "surface-dim": "#131313",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "surface-container-highest": "#353535",
+                    "outline-variant": "#5d3f3c",
+                    "on-secondary-container": "#b7b4b4",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#e3e2e2",
+                    "inverse-surface": "#e2e2e2",
+                    "on-secondary-fixed-variant": "#474746",
+                    "outline": "#ae8884",
+                    "secondary-container": "#474746",
+                    "surface-variant": "#353535",
+                    "primary": "#ffb4ac",
+                    "tertiary-fixed-dim": "#c7c6c6",
+                    "on-primary-container": "#140000",
+                    "on-surface": "#e2e2e2",
+                    "on-primary-fixed": "#410002",
+                    "on-primary": "#690007",
+                    "surface-tint": "#ffb4ac",
+                    "on-surface-variant": "#e7bdb8",
+                    "tertiary-container": "#919090",
+                    "surface-container": "#1f1f1f",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-low": "#1b1b1b",
+                    "on-secondary": "#313030",
+                    "inverse-primary": "#c00015",
+                    "on-tertiary": "#303031",
+                    "secondary": "#c8c6c5",
+                    "inverse-on-surface": "#303030",
+                    "on-tertiary-container": "#292a2a",
+                    "surface-bright": "#393939",
+                    "on-error-container": "#ffdad6",
+                    "primary-fixed": "#ffdad6",
+                    "on-primary-fixed-variant": "#93000e",
+                    "tertiary": "#c7c6c6",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "secondary-fixed": "#e5e2e1",
+                    "primary-container": "#e82127"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "0px"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": [
+                            "Manrope"
+                    ],
+                    "body": [
+                            "Inter"
+                    ],
+                    "label": [
+                            "Inter"
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>body {
+    background-color: theme("colors.surface");
+    color: theme("colors.on-surface");
+    font-family: theme("fontFamily.body");
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden
+    }
+.bg-image-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: linear-gradient(rgba(19, 19, 19, 0.85), rgba(19, 19, 19, 0.95)), url(cybertruck.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat
+    }
+/* TopAppBar Styles */
+.top-app-bar {
+    background-color: rgba(19, 19, 19, 0.8);
+    backdrop-filter: blur(8px);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    height: 4rem
+    }
+.top-app-bar-headline {
+    color: #e2e2e2;
+    font-family: "Manrope", sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    letter-spacing: 0.2em
+    }
+.top-app-bar-icon {
+    color: #e82127
+    }
+/* Form Input Styles */
+.kinetic-input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid theme("colors.outline-variant");
+    border-radius: 0;
+    padding: 1rem 0;
+    width: 100%;
+    color: theme("colors.on-surface");
+    font-family: theme("fontFamily.body");
+    font-size: 1rem;
+    transition: border-color 0.3s ease
+    }
+.kinetic-input:focus {
+    outline: none;
+    border-bottom: 2px solid theme("colors.primary");
+    box-shadow: none
+    }
+.kinetic-input::placeholder {
+    color: theme("colors.on-surface-variant");
+    opacity: 0.5
+    }
+/* Button Styles */
+.kinetic-btn-primary {
+    background-color: theme("colors.primary-container");
+    color: theme("colors.on-primary-container");
+    border: none;
+    border-radius: 0;
+    padding: 1rem 2rem;
+    font-family: theme("fontFamily.label");
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    cursor: pointer
+    }
+.kinetic-btn-primary:hover {
+    background-color: theme("colors.primary")
+    }
+/* Checkbox Styles */
+.kinetic-checkbox {
+    appearance: none;
+    background-color: transparent;
+    border: 1px solid theme("colors.outline-variant");
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease
+    }
+.kinetic-checkbox:checked {
+    background-color: theme("colors.primary-container");
+    border-color: theme("colors.primary-container")
+    }
+.kinetic-checkbox:checked::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid theme("colors.on-primary-container");
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg)
+    }
+/* Layout Container */
+.main-content {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    padding: 2rem 1.5rem;
+    position: relative;
+    z-index: 10
+    }
+.form-container {
+    width: 100%;
+    max-width: 28rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background-color: rgba(19, 19, 19, 0.4);
+    padding: 2rem;
+    backdrop-filter: blur(4px)
+    }</style>
+</head>
+<body>
+<div class="bg-image-container"></div>
+<!-- TopAppBar -->
+<header class="top-app-bar no-line tonal-layering">
+<a href="login.html" aria-label="Back" class="top-app-bar-icon hover:bg-[#2a2a2a] transition-colors duration-300 p-2">
+    <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>arrow_back</span>
+</a>
+<a href="index.html" class="top-app-bar-headline">TESLA</a>
+<div style="width: 40px;"></div> <!-- Spacer for balance -->
+</header>
+<!-- Main Content -->
+<main class="main-content">
+<div class="form-container">
+<div class="mb-8">
+<h2 class="text-on-surface font-headline text-3xl font-bold tracking-tight mb-2">Create Account</h2>
+<p class="text-on-surface-variant font-body text-base">Enter your details to join the Tesla ecosystem.</p>
+</div>
+        <form id="signupForm">
+            <div class="flex flex-col gap-6 mb-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <input class="kinetic-input" id="firstName" placeholder="First Name" required="" type="text" />
+                    </div>
+                    <div>
+                        <input class="kinetic-input" id="lastName" placeholder="Last Name" required="" type="text" />
+                    </div>
+                </div>
+                <div>
+                    <input class="kinetic-input" id="email" placeholder="Email Address" required="" type="email" />
+                </div>
+                <div>
+                    <input class="kinetic-input" id="password" placeholder="Password" required="" type="password" />
+                </div>
+            </div>
+            <div class="flex items-start gap-3 mb-10">
+                <div class="flex items-center h-5">
+                    <input class="kinetic-checkbox" id="marketing" type="checkbox" />
+                </div>
+                <label class="text-on-surface-variant font-body text-sm leading-tight cursor-pointer select-none"
+                    for="marketing">
+                    I agree to receive communications from Tesla about products, services, and exclusive events.
+                </label>
+            </div>
+                <!-- Error Box -->
+                <div id="signup-error" class="hidden p-3.5 bg-red-950/80 border border-red-500/50 text-red-200 text-xs font-medium flex items-center gap-2.5 mb-6">
+                    <span class="material-symbols-outlined text-base text-red-400">error</span>
+                    <span id="signup-error-text">Account creation error.</span>
+                </div>
+
+                <button class="kinetic-btn-primary" type="submit">
+                    Create Account
+                </button>
+            </form>
+            <div class="text-center mt-6">
+                <p class="text-on-surface-variant font-body text-sm">
+                    Already have an account? <a class="text-primary hover:underline" href="login.html">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </main>
+    <script src="cloud-sync.js"></script>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorBox = document.getElementById('signup-error');
+            const errorText = document.getElementById('signup-error-text');
+
+            if (window.KineticCloud) {
+                const result = window.KineticCloud.signup(firstName, lastName, email, password);
+                if (result.success) {
+                    window.location.href = 'home.html';
+                } else {
+                    if (errorBox && errorText) {
+                        errorBox.classList.remove('hidden');
+                        errorText.textContent = result.error || "Signup error.";
+                    } else {
+                        alert(result.error || "Signup error.");
+                    }
+                }
+            } else {
+                localStorage.setItem('kinetic_user_name', firstName);
+                localStorage.setItem('kinetic_user_email', email);
+                window.location.href = 'home.html';
+            }
+        });
+    </script>
+</body></html>

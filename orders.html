@@ -1,0 +1,2524 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/x-icon" href="favicon.jpg">
+    <title>Kinetic | Delivery Registration</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface": "#e2e2e2",
+                        "on-surface-variant": "#e7bdb8",
+                        "surface": "#131313",
+                        "primary": "#ffb4ac",
+                        "primary-container": "#e82127",
+                        "surface-container-low": "#1b1b1b",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-container-highest": "#353535",
+                        "surface-container-lowest": "#0e0e0e",
+                        "outline-variant": "#5d3f3c",
+                        "outline": "#ae8884",
+                        "background": "#131313",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0px",
+                        lg: "0px",
+                        xl: "0px",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Manrope"],
+                        body: ["Inter"],
+                        label: ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #131313;
+            color: #e2e2e2;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0e0e0e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e82127;
+        }
+
+        ::selection {
+            background-color: #e82127;
+            color: #ffffff;
+        }
+
+        select option {
+            background-color: #1b1b1b;
+            color: #e2e2e2;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.8);
+            cursor: pointer;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .shake-error {
+            animation: shake 0.35s ease-in-out;
+        }
+
+        .step-transition {
+            animation: fadeInSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media print {
+            header, nav, #stepper-container, .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+            .bg-surface-container-low, .bg-surface-container-high, .bg-surface-container-highest {
+                background-color: #f7f7f7 !important;
+                border: 1px solid #e0e0e0 !important;
+                color: #000000 !important;
+            }
+            .text-on-surface, .text-on-surface-variant {
+                color: #111111 !important;
+            }
+            .text-primary, .text-primary-container {
+                color: #e82127 !important;
+            }
+            main {
+                padding-top: 10px !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body min-h-screen antialiased selection:bg-primary-container selection:text-white pb-32">
+    <!-- Top Bar -->
+    <header class="fixed top-0 w-full z-50 bg-[#131313]/90 backdrop-blur-md flex justify-between items-center px-6 h-16 border-b border-white/5">
+        <div class="flex items-center gap-4">
+            <a href="home.html" class="material-symbols-outlined text-on-surface hover:text-primary transition-colors p-2">arrow_back</a>
+            <div class="font-headline tracking-[0.2em] uppercase text-xl font-bold">DELIVERY</div>
+        </div>
+        <div class="w-10"></div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="pt-20 px-4 sm:px-6 max-w-4xl mx-auto">
+        <!-- Toast Notification Box -->
+        <div id="toast-notification" class="fixed top-20 right-6 z-[100] max-w-sm bg-surface-container-high border-l-4 border-l-emerald-400 border border-white/10 px-5 py-4 shadow-2xl transition-all duration-300 transform translate-x-[150%] opacity-0 pointer-events-none flex items-start gap-3">
+            <span id="toast-icon" class="material-symbols-outlined text-emerald-400 text-xl">check_circle</span>
+            <div>
+                <p id="toast-title" class="font-headline text-xs font-bold uppercase tracking-wider text-white">Notice</p>
+                <p id="toast-message" class="text-xs text-on-surface-variant mt-0.5 leading-relaxed">Operation completed.</p>
+            </div>
+        </div>
+
+        <!-- Navigation View Switcher (Scheduled Delivery vs New Order) -->
+        <div id="delivery-view-tabs" class="hidden flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6 bg-surface-container-low border border-white/5 p-2 sm:p-2.5">
+            <div class="flex items-center gap-2">
+                <button type="button" id="tab-btn-scheduled" onclick="switchToScheduledView()" class="flex-1 sm:flex-none px-4 py-2.5 font-headline text-xs font-bold uppercase tracking-wider bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-md">
+                    <span class="material-symbols-outlined text-base">event_available</span>
+                    <span>Scheduled Delivery</span>
+                    <span id="tab-orders-count-badge" class="bg-white/20 text-white text-[10px] font-mono px-2 py-0.5 font-bold">1</span>
+                </button>
+                <button type="button" id="tab-btn-new" onclick="switchToNewRegistrationView()" class="flex-1 sm:flex-none px-4 py-2.5 font-headline text-xs font-bold uppercase tracking-wider bg-surface-container-high text-on-surface hover:text-white transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-base">add_circle</span>
+                    <span>New Vehicle Order</span>
+                </button>
+            </div>
+            <!-- Multi-order selector dropdown -->
+            <div id="multi-order-selector-wrap" class="hidden flex items-center gap-2">
+                <label for="order-selector-select" class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/80">Active Order:</label>
+                <select id="order-selector-select" onchange="switchActiveOrder(this.value)" class="bg-surface-container-high border border-outline-variant/30 text-xs text-on-surface font-mono py-1.5 px-3 focus:outline-none focus:border-primary-container">
+                </select>
+            </div>
+        </div>
+
+        <!-- Active Order Alert Banner (Shown during cart/checkout if an active order already exists) -->
+        <div id="active-order-alert-banner" class="hidden mb-6 p-4 bg-surface-container-high border-l-4 border-l-emerald-400 border border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-emerald-400 text-2xl">verified</span>
+                <div>
+                    <p class="font-headline text-xs font-bold uppercase tracking-wider text-on-surface">You have an active scheduled delivery</p>
+                    <p id="alert-banner-text" class="text-[11px] text-on-surface-variant font-mono">Reference #KT-2026-XXXXX</p>
+                </div>
+            </div>
+            <button type="button" onclick="switchToScheduledView()" class="self-start sm:self-auto px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-headline font-bold uppercase tracking-wider transition-all flex items-center gap-1.5">
+                <span>View Delivery Details</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+        </div>
+
+        <!-- Reschedule Mode Banner -->
+        <div id="reschedule-mode-banner" class="hidden mb-6 p-4 bg-primary-container/20 border-l-4 border-l-primary-container border border-primary-container/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-2xl animate-spin">update</span>
+                <div>
+                    <p class="font-headline text-xs font-bold uppercase tracking-wider text-white">Rescheduling Delivery Appointment</p>
+                    <p id="reschedule-banner-ref" class="text-[11px] text-on-surface-variant">Choose a new delivery date & time slot below.</p>
+                </div>
+            </div>
+            <button type="button" onclick="cancelReschedule()" class="self-start sm:self-auto px-4 py-2 border border-white/20 hover:border-white text-on-surface hover:text-white text-xs uppercase font-bold tracking-wider transition-all">
+                Cancel Reschedule
+            </button>
+        </div>
+
+        <!-- Edit Mode Banner -->
+        <div id="edit-mode-banner" class="hidden mb-6 p-4 bg-surface-container-high border-l-4 border-l-primary-container border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-2xl">edit_note</span>
+                <div>
+                    <p class="font-headline text-xs font-bold uppercase tracking-wider text-white">Updating Delivery Information</p>
+                    <p id="edit-banner-ref" class="text-[11px] text-on-surface-variant">Update your delivery address or contact details below.</p>
+                </div>
+            </div>
+            <button type="button" onclick="cancelEditDetails()" class="self-start sm:self-auto px-4 py-2 border border-white/20 hover:border-white text-on-surface hover:text-white text-xs uppercase font-bold tracking-wider transition-all">
+                Cancel Edit
+            </button>
+        </div>
+
+        <!-- Progress Stepper -->
+        <div id="stepper-container" class="py-6 border-b border-white/5 mb-8">
+            <div class="flex items-center justify-between relative max-w-3xl mx-auto">
+                <!-- Step 1 Indicator -->
+                <div id="stepper-node-1" class="flex flex-col items-center z-10 cursor-pointer" onclick="goToStep(1)">
+                    <div id="stepper-circle-1" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-primary-container text-white ring-4 ring-primary-container/20 ring-offset-2 ring-offset-surface transition-all">
+                        <span class="material-symbols-outlined text-base sm:text-lg">shopping_cart</span>
+                    </div>
+                    <span id="stepper-label-1" class="font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2 text-white hidden sm:block">Cart</span>
+                </div>
+
+                <!-- Connecting Line 1-2 -->
+                <div id="stepper-line-1" class="flex-1 h-0.5 mx-1 sm:mx-2 bg-surface-container-high transition-colors duration-300"></div>
+
+                <!-- Step 2 Indicator -->
+                <div id="stepper-node-2" class="flex flex-col items-center z-10 cursor-pointer" onclick="goToStep(2)">
+                    <div id="stepper-circle-2" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-surface-container-high text-on-surface-variant/40 border border-outline-variant/30 transition-all">
+                        <span class="material-symbols-outlined text-base sm:text-lg">location_on</span>
+                    </div>
+                    <span id="stepper-label-2" class="font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2 text-on-surface-variant/40 hidden sm:block">Location</span>
+                </div>
+
+                <!-- Connecting Line 2-3 -->
+                <div id="stepper-line-2" class="flex-1 h-0.5 mx-1 sm:mx-2 bg-surface-container-high transition-colors duration-300"></div>
+
+                <!-- Step 3 Indicator -->
+                <div id="stepper-node-3" class="flex flex-col items-center z-10 cursor-pointer" onclick="goToStep(3)">
+                    <div id="stepper-circle-3" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-surface-container-high text-on-surface-variant/40 border border-outline-variant/30 transition-all">
+                        <span class="material-symbols-outlined text-base sm:text-lg">person</span>
+                    </div>
+                    <span id="stepper-label-3" class="font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2 text-on-surface-variant/40 hidden sm:block">Details</span>
+                </div>
+
+                <!-- Connecting Line 3-4 -->
+                <div id="stepper-line-3" class="flex-1 h-0.5 mx-1 sm:mx-2 bg-surface-container-high transition-colors duration-300"></div>
+
+                <!-- Step 4 Indicator -->
+                <div id="stepper-node-4" class="flex flex-col items-center z-10 cursor-pointer" onclick="goToStep(4)">
+                    <div id="stepper-circle-4" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-surface-container-high text-on-surface-variant/40 border border-outline-variant/30 transition-all">
+                        <span class="material-symbols-outlined text-base sm:text-lg">calendar_month</span>
+                    </div>
+                    <span id="stepper-label-4" class="font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2 text-on-surface-variant/40 hidden sm:block">Schedule</span>
+                </div>
+
+                <!-- Connecting Line 4-5 -->
+                <div id="stepper-line-4" class="flex-1 h-0.5 mx-1 sm:mx-2 bg-surface-container-high transition-colors duration-300"></div>
+
+                <!-- Step 5 Indicator -->
+                <div id="stepper-node-5" class="flex flex-col items-center z-10 cursor-pointer" onclick="goToStep(5)">
+                    <div id="stepper-circle-5" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-surface-container-high text-on-surface-variant/40 border border-outline-variant/30 transition-all">
+                        <span class="material-symbols-outlined text-base sm:text-lg">check_circle</span>
+                    </div>
+                    <span id="stepper-label-5" class="font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2 text-on-surface-variant/40 hidden sm:block">Confirmation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== STEP 1: CART ==================== -->
+        <section id="step-1" class="step-transition">
+            <!-- Empty Cart State -->
+            <div id="cart-empty-view" class="hidden">
+                <!-- Active Scheduled Delivery Banner in Empty Cart (Shown when user has scheduled deliveries) -->
+                <div id="cart-empty-active-delivery" class="hidden mb-8 p-6 bg-surface-container-high border-l-4 border-l-primary-container border border-white/10 shadow-xl">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <img id="empty-active-delivery-img" src="cybertruck_home.jpg" alt="Vehicle" class="w-20 aspect-video object-cover bg-black border border-white/10" />
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-emerald-400 font-mono">Saved Scheduled Delivery Found</span>
+                                </div>
+                                <h3 id="empty-active-delivery-name" class="font-headline text-lg font-black uppercase text-on-surface mt-0.5">Cybertruck</h3>
+                                <p id="empty-active-delivery-meta" class="text-xs text-on-surface-variant font-mono mt-0.5">Ref: KT-2026-XXXXX • Scheduled for Friday, Oct 24</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="switchToScheduledView()" class="w-full sm:w-auto bg-primary-container hover:bg-red-700 text-white font-headline text-xs font-bold tracking-[0.2em] uppercase px-6 py-3.5 transition-all flex items-center justify-center gap-2 shadow-lg">
+                            <span>ACCESS DELIVERY INFO</span>
+                            <span class="material-symbols-outlined text-base">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="border-2 border-dashed border-outline-variant/30 p-10 sm:p-16 text-center bg-surface-container-low/40">
+                    <span class="material-symbols-outlined text-5xl sm:text-6xl text-on-surface-variant/30 mb-4 inline-block">shopping_cart</span>
+                    <h2 class="font-headline text-2xl font-black uppercase tracking-widest text-on-surface mb-2">Your Cart is Empty</h2>
+                    <p class="text-on-surface-variant text-xs sm:text-sm font-body max-w-md mx-auto mb-8 uppercase tracking-widest leading-relaxed">
+                        No vehicle configuration currently in cart. Choose a vehicle from our inventory to initiate a new delivery registration, or access your saved delivery info above.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="vehicles.html" class="w-full sm:w-auto bg-primary-container hover:bg-red-700 text-white font-headline text-xs font-bold tracking-[0.2em] uppercase px-8 py-4 transition-all duration-300 shadow-lg shadow-primary-container/20">
+                            BROWSE VEHICLES
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Past Registered Orders (if any exist) -->
+                <div id="past-orders-section" class="mt-12 hidden">
+                    <div class="flex items-center justify-between mb-4 border-b border-white/5 pb-2">
+                        <h3 class="font-headline text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">Scheduled Delivery Registrations</h3>
+                        <span id="past-orders-count" class="text-[10px] font-mono text-primary font-bold"></span>
+                    </div>
+                    <div id="past-orders-list" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- Filled Cart View -->
+            <div id="cart-filled-view">
+                <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-white/5 pb-4">
+                    <div>
+                        <span class="text-[10px] font-label uppercase tracking-[0.25em] text-primary font-bold">Step 01 / 05</span>
+                        <h1 class="font-headline text-2xl sm:text-3xl font-black uppercase tracking-wider text-on-surface mt-1">Selected Vehicle</h1>
+                    </div>
+                    <p class="text-xs text-on-surface-variant uppercase tracking-widest">Verify specifications before booking</p>
+                </div>
+
+                <!-- Vehicle Hero Card -->
+                <div class="bg-surface-container-low border border-white/5 p-4 sm:p-6 mb-6">
+                    <div class="relative aspect-video w-full bg-black overflow-hidden mb-6 border border-white/5">
+                        <img id="cart-vehicle-image" src="cybertruck_home.jpg" alt="Selected Vehicle" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#1b1b1b] via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute top-4 left-4 bg-primary-container text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 shadow-lg">
+                            RESERVED
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/5">
+                        <div>
+                            <h2 id="cart-vehicle-name" class="font-headline text-2xl sm:text-3xl font-black uppercase tracking-wider text-on-surface">CYBERTRUCK</h2>
+                            <p id="cart-vehicle-variant" class="text-xs sm:text-sm font-label uppercase tracking-[0.25em] text-primary font-bold mt-1">Cyberbeast Foundation Series</p>
+                        </div>
+                        <div class="text-left md:text-right">
+                            <span class="text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant block mb-1">Purchase Price</span>
+                            <div class="flex items-baseline md:justify-end gap-3">
+                                <span id="cart-vehicle-price" class="text-3xl sm:text-4xl font-black font-headline text-primary-container">$61,000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Configuration Specs -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6">
+                        <div class="bg-surface-container-high border border-outline-variant/20 p-4">
+                            <div class="flex items-center gap-2 text-on-surface-variant mb-1">
+                                <span class="material-symbols-outlined text-sm text-primary">palette</span>
+                                <span class="text-[10px] uppercase font-bold tracking-[0.2em]">Exterior</span>
+                            </div>
+                            <p id="cart-vehicle-color" class="font-headline text-xs font-bold uppercase text-on-surface">Matte Stealth Black</p>
+                        </div>
+                        <div class="bg-surface-container-high border border-outline-variant/20 p-4">
+                            <div class="flex items-center gap-2 text-on-surface-variant mb-1">
+                                <span class="material-symbols-outlined text-sm text-primary">tire_repair</span>
+                                <span class="text-[10px] uppercase font-bold tracking-[0.2em]">Wheels</span>
+                            </div>
+                            <p id="cart-vehicle-wheels" class="font-headline text-xs font-bold uppercase text-on-surface">20" Cyber Wheels</p>
+                        </div>
+                        <div class="bg-surface-container-high border border-outline-variant/20 p-4">
+                            <div class="flex items-center gap-2 text-on-surface-variant mb-1">
+                                <span class="material-symbols-outlined text-sm text-primary">airline_seat_recline_extra</span>
+                                <span class="text-[10px] uppercase font-bold tracking-[0.2em]">Interior</span>
+                            </div>
+                            <p id="cart-vehicle-interior" class="font-headline text-xs font-bold uppercase text-on-surface">Tactical Grey Dark</p>
+                        </div>
+                    </div>
+
+                    <!-- Button Controls -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                        <button type="button" onclick="removeFromCart()" class="text-on-surface-variant hover:text-error text-xs uppercase tracking-widest font-bold flex items-center gap-1.5 transition-colors py-2">
+                            <span class="material-symbols-outlined text-base">delete</span>
+                            REMOVE FROM CART
+                        </button>
+                        <button type="button" onclick="goToStep(2)" class="w-full sm:w-auto bg-primary-container hover:bg-red-700 text-white font-headline text-xs font-bold tracking-[0.2em] uppercase px-10 py-4 transition-all duration-300 shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2">
+                            CONTINUE TO LOCATION
+                            <span class="material-symbols-outlined text-base">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== STEP 2: LOCATION ==================== -->
+        <section id="step-2" class="step-transition hidden">
+            <div class="mb-8 border-b border-white/5 pb-4">
+                <span class="text-[10px] font-label uppercase tracking-[0.25em] text-primary font-bold">Step 02 / 05</span>
+                <h2 class="font-headline text-2xl sm:text-3xl font-black uppercase tracking-wider text-on-surface mt-1">Delivery Destination</h2>
+                <p class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Select fulfillment method and primary delivery address</p>
+            </div>
+
+            <!-- Delivery Method Toggle -->
+            <div class="mb-8">
+                <label class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-3 block">Delivery Method</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Pickup Card -->
+                    <div id="method-card-pickup" onclick="setDeliveryMethod('pickup')" class="cursor-pointer p-5 bg-surface-container-high border-l-4 border-l-primary-container border border-outline-variant/30 transition-all">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="material-symbols-outlined text-primary text-2xl">local_shipping</span>
+                            <span class="font-headline text-sm font-bold uppercase tracking-wider text-on-surface">Pick Up</span>
+                        </div>
+                        <p class="text-xs text-on-surface-variant leading-relaxed">Direct collection from your nearest regional Tesla Fulfillment & Delivery Hub.</p>
+                    </div>
+
+                    <!-- Home Delivery Card -->
+                    <div id="method-card-home" onclick="setDeliveryMethod('home')" class="cursor-pointer p-5 bg-surface-container-low border border-outline-variant/30 hover:bg-surface-container-high transition-all">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="material-symbols-outlined text-on-surface-variant text-2xl">home</span>
+                            <span class="font-headline text-sm font-bold uppercase tracking-wider text-on-surface">Home Delivery</span>
+                        </div>
+                        <p class="text-xs text-on-surface-variant leading-relaxed">Enclosed single-vehicle carrier transport straight to your registered address.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address Form -->
+            <form id="location-form" onsubmit="event.preventDefault(); (isEditingDetails ? saveEditedDetails() : goToStep(3));" novalidate class="space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Country -->
+                    <div>
+                        <label for="loc-country" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Country *</label>
+                        <select id="loc-country" name="country" onchange="clearFieldError('loc-country'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors">
+                            <option value="United States">United States</option>
+                            <option value="Canada">Canada</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="Germany">Germany</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Norway">Norway</option>
+                        </select>
+                        <span id="err-loc-country" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Country is required</span>
+                    </div>
+
+                    <!-- State -->
+                    <div>
+                        <label for="loc-state" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">State / Province *</label>
+                        <select id="loc-state" name="state" onchange="clearFieldError('loc-state'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors">
+                            <option value="">Select State</option>
+                        </select>
+                        <span id="err-loc-state" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Please select a state</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <!-- City -->
+                    <div class="sm:col-span-2">
+                        <label for="loc-city" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">City *</label>
+                        <input type="text" id="loc-city" name="city" placeholder="e.g. Austin" oninput="clearFieldError('loc-city'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                        <span id="err-loc-city" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">City is required</span>
+                    </div>
+
+                    <!-- Zip Code -->
+                    <div>
+                        <label for="loc-zip" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Zip / Postal Code *</label>
+                        <input type="text" id="loc-zip" name="zip" placeholder="78725" maxlength="10" oninput="clearFieldError('loc-zip'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                        <span id="err-loc-zip" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Valid 5-digit zip required</span>
+                    </div>
+                </div>
+
+                <!-- Street Address -->
+                <div>
+                    <label for="loc-street" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Street Address *</label>
+                    <input type="text" id="loc-street" name="street" placeholder="1 Tesla Road" oninput="clearFieldError('loc-street'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                    <span id="err-loc-street" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Street address is required</span>
+                </div>
+
+                <!-- Delivery Notes -->
+                <div>
+                    <label for="loc-notes" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Delivery Instructions / Gate Code (Optional)</label>
+                    <textarea id="loc-notes" name="notes" rows="3" oninput="autoSaveDraft();" placeholder="Provide any gate codes, security checkpoints, or carrier instructions..." class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors resize-none"></textarea>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/5">
+                    <button type="button" onclick="goToStep(1)" class="w-full sm:w-auto border border-outline-variant/50 hover:border-white text-on-surface px-8 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">arrow_back</span>
+                        BACK TO CART
+                    </button>
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                        <button type="button" id="save-location-edit-btn" onclick="saveEditedDetails()" class="hidden w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-base">save</span>
+                            SAVE & RETURN
+                        </button>
+                        <button type="submit" class="w-full sm:w-auto bg-primary-container hover:bg-red-700 text-white px-10 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2">
+                            CONTINUE TO DETAILS
+                            <span class="material-symbols-outlined text-base">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- ==================== STEP 3: DETAILS ==================== -->
+        <section id="step-3" class="step-transition hidden">
+            <div class="mb-8 border-b border-white/5 pb-4">
+                <span class="text-[10px] font-label uppercase tracking-[0.25em] text-primary font-bold">Step 03 / 05</span>
+                <h2 class="font-headline text-2xl sm:text-3xl font-black uppercase tracking-wider text-on-surface mt-1">Registrant Details</h2>
+                <p class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Vehicle title and legal registration identity</p>
+            </div>
+
+            <form id="details-form" onsubmit="event.preventDefault(); (isEditingDetails ? saveEditedDetails() : goToStep(4));" novalidate class="space-y-6">
+                <!-- Names -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label for="det-first-name" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">First Name *</label>
+                        <input type="text" id="det-first-name" name="firstName" placeholder="Elon" oninput="clearFieldError('det-first-name'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                        <span id="err-det-first-name" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">First name is required</span>
+                    </div>
+                    <div>
+                        <label for="det-last-name" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Last Name *</label>
+                        <input type="text" id="det-last-name" name="lastName" placeholder="Musk" oninput="clearFieldError('det-last-name'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                        <span id="err-det-last-name" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Last name is required</span>
+                    </div>
+                </div>
+
+                <!-- Email & Phone -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label for="det-email" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Email Address *</label>
+                        <input type="email" id="det-email" name="email" placeholder="elon@tesla.com" oninput="clearFieldError('det-email'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                        <span id="err-det-email" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Valid email is required</span>
+                    </div>
+                    <div>
+                        <label for="det-phone" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Phone Number *</label>
+                        <input type="tel" id="det-phone" name="phone" placeholder="+1 (555) 019-2834" oninput="clearFieldError('det-phone'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                        <span id="err-det-phone" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Valid phone number is required</span>
+                    </div>
+                </div>
+
+                <!-- DOB & Driver's License -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label for="det-dob" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Date of Birth *</label>
+                        <input type="date" id="det-dob" name="dob" onchange="clearFieldError('det-dob'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                        <span id="err-det-dob" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Date of birth is required</span>
+                    </div>
+                    <div>
+                        <label for="det-license" class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2 block">Driver's License Number *</label>
+                        <input type="text" id="det-license" name="license" placeholder="DL-8829103-X" oninput="clearFieldError('det-license'); autoSaveDraft();" class="bg-surface-container-low border border-outline-variant/30 text-on-surface px-4 py-3 w-full font-body text-sm focus:border-primary-container focus:outline-none transition-colors" />
+                        <span id="err-det-license" class="text-error text-[10px] uppercase tracking-widest mt-1 hidden">Driver's license is required</span>
+                    </div>
+                </div>
+
+                <!-- Contact Preference Chips -->
+                <div>
+                    <label class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-3 block">Preferred Contact Channel</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button type="button" id="contact-chip-email" onclick="setContactPreference('email')" class="py-3 px-4 text-center font-headline text-xs font-bold uppercase tracking-wider bg-primary-container text-white border border-primary-container transition-all">
+                            Email
+                        </button>
+                        <button type="button" id="contact-chip-phone" onclick="setContactPreference('phone')" class="py-3 px-4 text-center font-headline text-xs font-bold uppercase tracking-wider bg-surface-container-low text-on-surface-variant border border-outline-variant/30 hover:text-white transition-all">
+                            Phone
+                        </button>
+                        <button type="button" id="contact-chip-sms" onclick="setContactPreference('sms')" class="py-3 px-4 text-center font-headline text-xs font-bold uppercase tracking-wider bg-surface-container-low text-on-surface-variant border border-outline-variant/30 hover:text-white transition-all">
+                            SMS Text
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/5">
+                    <button type="button" onclick="goToStep(2)" class="w-full sm:w-auto border border-outline-variant/50 hover:border-white text-on-surface px-8 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">arrow_back</span>
+                        BACK TO LOCATION
+                    </button>
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                        <button type="button" id="save-details-edit-btn" onclick="saveEditedDetails()" class="hidden w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-base">save</span>
+                            SAVE & RETURN
+                        </button>
+                        <button type="submit" class="w-full sm:w-auto bg-primary-container hover:bg-red-700 text-white px-10 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2">
+                            CONTINUE TO SCHEDULE
+                            <span class="material-symbols-outlined text-base">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- ==================== STEP 4: SCHEDULE ==================== -->
+        <section id="step-4" class="step-transition hidden">
+            <div class="mb-8 border-b border-white/5 pb-4">
+                <span class="text-[10px] font-label uppercase tracking-[0.25em] text-primary font-bold">Step 04 / 05</span>
+                <h2 class="font-headline text-2xl sm:text-3xl font-black uppercase tracking-wider text-on-surface mt-1">Delivery Appointment</h2>
+                <p class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Select an active delivery window from the logistics calendar</p>
+            </div>
+
+            <!-- Calendar Box -->
+            <div class="bg-surface-container-low border border-white/5 p-4 sm:p-6 mb-8">
+                <!-- Month & Year Controls -->
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+                    <button type="button" id="cal-prev-btn" onclick="prevMonth()" class="p-2 border border-outline-variant/30 hover:border-primary text-on-surface hover:text-primary transition-colors flex items-center justify-center disabled:opacity-20 disabled:cursor-not-allowed">
+                        <span class="material-symbols-outlined text-base">chevron_left</span>
+                    </button>
+                    <h3 id="cal-month-title" class="font-headline text-base sm:text-lg font-black uppercase tracking-[0.2em] text-on-surface">
+                        OCTOBER 2026
+                    </h3>
+                    <button type="button" id="cal-next-btn" onclick="nextMonth()" class="p-2 border border-outline-variant/30 hover:border-primary text-on-surface hover:text-primary transition-colors flex items-center justify-center disabled:opacity-20 disabled:cursor-not-allowed">
+                        <span class="material-symbols-outlined text-base">chevron_right</span>
+                    </button>
+                </div>
+
+                <!-- Weekday Headers -->
+                <div class="grid grid-cols-7 gap-1 sm:gap-2 mb-2 text-center">
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 py-1">Sun</span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 py-1">Mon</span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 py-1">Tue</span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 py-1">Wed</span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 py-1">Thu</span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 py-1">Fri</span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 py-1">Sat</span>
+                </div>
+
+                <!-- Calendar Days Grid -->
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-2">
+                    <!-- Populated via JavaScript -->
+                </div>
+
+                <!-- Calendar Legend -->
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-6 pt-4 border-t border-white/5 text-[10px] uppercase tracking-widest text-on-surface-variant">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 bg-primary-container inline-block"></span>
+                        <span>Selected</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 bg-surface-container-high border border-outline-variant/30 inline-block"></span>
+                        <span>Available</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 border border-dashed border-primary inline-block"></span>
+                        <span>Today</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 opacity-50">
+                        <span class="w-2.5 h-2.5 bg-surface-container-lowest line-through inline-block"></span>
+                        <span>Unavailable</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Slots Section -->
+            <div id="time-slots-container" class="bg-surface-container-low border border-white/5 p-4 sm:p-6 mb-8 hidden">
+                <div class="mb-4">
+                    <span class="text-[10px] font-label uppercase tracking-[0.2em] text-primary font-bold">Appointment Windows</span>
+                    <h4 id="time-slots-date-label" class="font-headline text-sm sm:text-base font-bold uppercase tracking-wider text-on-surface mt-1">
+                        Available Time Slots
+                    </h4>
+                </div>
+                <div id="time-slots-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <!-- Populated via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/5">
+                <button type="button" onclick="goToStep(3)" class="w-full sm:w-auto border border-outline-variant/50 hover:border-white text-on-surface px-8 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-base">arrow_back</span>
+                    BACK TO DETAILS
+                </button>
+                <button type="button" id="schedule-continue-btn" onclick="submitSchedule()" disabled class="w-full sm:w-auto bg-primary-container text-white px-10 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2 opacity-40 cursor-not-allowed">
+                    CONFIRM & REGISTER
+                    <span class="material-symbols-outlined text-base">check</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== STEP 5: CONFIRMATION & DELIVERY PASS HUB ==================== -->
+        <section id="step-5" class="step-transition hidden">
+            <!-- Animated Green Checkmark Header & Status -->
+            <div class="text-center py-6">
+                <div class="relative flex items-center justify-center w-20 h-20 mx-auto mb-4">
+                    <div class="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping"></div>
+                    <div class="relative w-16 h-16 rounded-full bg-emerald-500/10 border-2 border-[#4ade80] flex items-center justify-center shadow-[0_0_25px_rgba(74,222,128,0.35)]">
+                        <span class="material-symbols-outlined text-[#4ade80] text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    </div>
+                </div>
+                <span class="text-[10px] font-label uppercase tracking-[0.3em] text-emerald-400 font-bold block mb-1">Registration Confirmed & Saved</span>
+                <h1 class="font-headline text-3xl sm:text-4xl font-black uppercase tracking-wider text-on-surface mb-2">Delivery Registration</h1>
+                
+                <div class="flex items-center justify-center gap-2 text-xs sm:text-sm text-on-surface-variant font-mono uppercase tracking-[0.15em] flex-wrap">
+                    <span>Reference:</span>
+                    <span id="conf-ref-id" class="text-primary font-black bg-primary-container/10 border border-primary-container/30 px-2.5 py-0.5">KT-2026-XXXXX</span>
+                    <button type="button" onclick="copyRefToClipboard()" title="Copy Reference ID" class="p-1 hover:text-white text-on-surface-variant transition-colors flex items-center gap-1 cursor-pointer">
+                        <span class="material-symbols-outlined text-sm">content_copy</span>
+                        <span class="text-[10px] uppercase font-bold tracking-wider">Copy</span>
+                    </button>
+                </div>
+
+                <!-- Live Countdown & Status Pill -->
+                <div class="mt-4 flex justify-center">
+                    <div id="conf-countdown-pill" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold uppercase tracking-widest shadow-md">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="conf-countdown-text">Scheduled Delivery Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual 4-Stage Logistics Pipeline -->
+            <div class="my-6 bg-surface-container-low border border-white/5 p-4 sm:p-5">
+                <div class="flex items-center justify-between mb-4 border-b border-white/5 pb-2.5">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-base">local_shipping</span>
+                        <span class="font-headline text-xs font-bold uppercase tracking-wider text-on-surface">Logistics & Handover Pipeline</span>
+                    </div>
+                    <span class="text-[10px] font-mono text-emerald-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Live Tracking Active
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                    <div class="bg-surface-container-high/60 border-l-2 border-l-emerald-400 p-3 text-left">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-400">Stage 01</span>
+                            <span class="material-symbols-outlined text-emerald-400 text-sm">check</span>
+                        </div>
+                        <p class="font-headline text-xs font-bold text-on-surface">VIN Assigned</p>
+                        <span class="text-[10px] text-on-surface-variant/70 font-mono">Hold Confirmed</span>
+                    </div>
+                    <div class="bg-surface-container-high/60 border-l-2 border-l-emerald-400 p-3 text-left">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-400">Stage 02</span>
+                            <span class="material-symbols-outlined text-emerald-400 text-sm">check</span>
+                        </div>
+                        <p class="font-headline text-xs font-bold text-on-surface">Window Booked</p>
+                        <span id="tracker-date-slot" class="text-[10px] text-emerald-400 font-mono font-bold">Confirmed</span>
+                    </div>
+                    <div class="bg-surface-container-high/60 border-l-2 border-l-primary-container p-3 text-left ring-1 ring-primary-container/30">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-primary">Stage 03</span>
+                            <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+                        </div>
+                        <p class="font-headline text-xs font-bold text-on-surface">Carrier Prep</p>
+                        <span class="text-[10px] text-on-surface-variant font-mono">Inspection & QA</span>
+                    </div>
+                    <div class="bg-surface-container-high/30 border-l-2 border-l-white/10 p-3 text-left opacity-70">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/50">Stage 04</span>
+                            <span class="material-symbols-outlined text-on-surface-variant/40 text-sm">schedule</span>
+                        </div>
+                        <p class="font-headline text-xs font-bold text-on-surface">Handover & Keys</p>
+                        <span class="text-[10px] text-on-surface-variant/70 font-mono">Digital Key Pass</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8">
+                <!-- Vehicle Card -->
+                <div class="bg-surface-container-low border-l-4 border-l-primary-container border border-white/5 p-5">
+                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-white/5">
+                        <span class="material-symbols-outlined text-primary text-base">directions_car</span>
+                        <h3 class="font-headline text-xs font-bold uppercase tracking-[0.2em] text-on-surface">Vehicle Details</h3>
+                    </div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <img id="conf-vehicle-thumb" src="cybertruck_home.jpg" alt="Vehicle" class="w-20 aspect-video object-cover bg-black border border-white/10" />
+                        <div>
+                            <h4 id="conf-vehicle-name" class="font-headline text-sm font-bold uppercase tracking-wider text-on-surface">CYBERTRUCK</h4>
+                            <p id="conf-vehicle-variant" class="text-[10px] text-primary uppercase tracking-widest">Cyberbeast</p>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5 text-xs text-on-surface-variant font-body">
+                        <div class="flex justify-between">
+                            <span class="text-[10px] uppercase tracking-wider text-on-surface-variant/60">Config:</span>
+                            <span id="conf-vehicle-specs" class="font-medium text-on-surface text-right">Black / 20" / Tactical</span>
+                        </div>
+                        <div class="flex justify-between pt-2 border-t border-white/5">
+                            <span class="text-[10px] uppercase tracking-wider text-on-surface-variant/60">Purchase Total:</span>
+                            <span id="conf-vehicle-price" class="font-headline text-sm font-black text-primary-container">$61,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Card -->
+                <div class="bg-surface-container-low border-l-4 border-l-primary-container border border-white/5 p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3 pb-2 border-b border-white/5">
+                            <span class="material-symbols-outlined text-primary text-base">location_on</span>
+                            <h3 class="font-headline text-xs font-bold uppercase tracking-[0.2em] text-on-surface">Fulfillment Location</h3>
+                        </div>
+                        <div class="space-y-2 text-xs text-on-surface-variant font-body">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-on-surface-variant/60 block mb-0.5">Method</span>
+                                <span id="conf-method" class="font-bold text-on-surface uppercase tracking-wider">Pickup (Delivery Hub)</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-on-surface-variant/60 block mb-0.5">Address</span>
+                                <span id="conf-address" class="text-on-surface leading-relaxed block font-medium">1 Tesla Road, Austin, TX 78725</span>
+                            </div>
+                            <div id="conf-notes-container" class="pt-1">
+                                <span class="text-[10px] uppercase tracking-widest text-on-surface-variant/60 block mb-0.5">Delivery Instructions</span>
+                                <span id="conf-notes" class="text-on-surface-variant/90 italic text-[11px] block">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="startEditCurrentDeliveryDetails()" class="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-white flex items-center gap-1 mt-4 pt-2 border-t border-white/5 transition-colors cursor-pointer self-start">
+                        <span class="material-symbols-outlined text-sm">edit_location</span>
+                        <span>Edit Destination & Notes</span>
+                    </button>
+                </div>
+
+                <!-- Customer Card -->
+                <div class="bg-surface-container-low border-l-4 border-l-primary-container border border-white/5 p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3 pb-2 border-b border-white/5">
+                            <span class="material-symbols-outlined text-primary text-base">badge</span>
+                            <h3 class="font-headline text-xs font-bold uppercase tracking-[0.2em] text-on-surface">Customer Identity</h3>
+                        </div>
+                        <div class="space-y-2 text-xs text-on-surface-variant font-body">
+                            <div class="flex justify-between">
+                                <span class="text-[10px] uppercase tracking-wider text-on-surface-variant/60">Registrant:</span>
+                                <span id="conf-customer-name" class="font-bold text-on-surface">Elon Musk</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-[10px] uppercase tracking-wider text-on-surface-variant/60">Email:</span>
+                                <span id="conf-customer-email" class="text-on-surface">elon@tesla.com</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-[10px] uppercase tracking-wider text-on-surface-variant/60">Phone:</span>
+                                <span id="conf-customer-phone" class="text-on-surface">+1 (555) 019-2834</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-[10px] uppercase tracking-wider text-on-surface-variant/60">License #:</span>
+                                <span id="conf-customer-license" class="font-mono text-on-surface">DL-8829103-X</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-[10px] uppercase tracking-wider text-on-surface-variant/60">Contact Mode:</span>
+                                <span id="conf-customer-contact" class="font-bold uppercase text-primary">EMAIL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="startEditCurrentDeliveryDetails()" class="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-white flex items-center gap-1 mt-4 pt-2 border-t border-white/5 transition-colors cursor-pointer self-start">
+                        <span class="material-symbols-outlined text-sm">edit</span>
+                        <span>Edit Customer Details</span>
+                    </button>
+                </div>
+
+                <!-- Schedule Card -->
+                <div class="bg-surface-container-low border-l-4 border-l-primary-container border border-white/5 p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3 pb-2 border-b border-white/5">
+                            <span class="material-symbols-outlined text-primary text-base">calendar_month</span>
+                            <h3 class="font-headline text-xs font-bold uppercase tracking-[0.2em] text-on-surface">Delivery Window</h3>
+                        </div>
+                        <div class="space-y-3 text-xs text-on-surface-variant font-body">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-on-surface-variant/60 block mb-0.5">Appointment Date</span>
+                                <span id="conf-schedule-date" class="font-headline text-sm font-bold text-on-surface">Friday, October 24, 2026</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-on-surface-variant/60 block mb-0.5">Allocated Time Slot</span>
+                                <span id="conf-schedule-time" class="font-headline text-sm font-bold text-primary">10:30 AM EST</span>
+                            </div>
+                            <div class="flex items-center gap-2 pt-2 border-t border-white/5">
+                                <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+                                <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold">Confirmed in Kinetic Logistics</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="startRescheduleCurrentDelivery()" class="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-white flex items-center gap-1 mt-4 pt-2 border-t border-white/5 transition-colors cursor-pointer self-start">
+                        <span class="material-symbols-outlined text-sm">event_repeat</span>
+                        <span>Reschedule Appointment</span>
+                    </button>
+                </div>
+
+                <!-- Digital Logistics Pass & Security Ticket -->
+                <div class="md:col-span-2 bg-gradient-to-r from-surface-container-low via-surface-container-high to-surface-container-low border border-white/10 p-5 relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="material-symbols-outlined text-primary text-base">qr_code_2</span>
+                                <span class="text-[10px] font-headline font-bold uppercase tracking-[0.25em] text-primary">Digital Fulfillment Pass</span>
+                            </div>
+                            <h4 class="font-headline text-base font-black uppercase text-on-surface">Verified Logistics Pass #<span id="pass-ref-display" class="font-mono text-primary">KT-2026-XXXXX</span></h4>
+                            <p class="text-xs text-on-surface-variant mt-0.5">Present this confirmation pass or digital ID at time of vehicle handover.</p>
+                        </div>
+                        <div class="flex items-center gap-6 self-start md:self-auto">
+                            <div class="text-left md:text-right">
+                                <span class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant/60 block">Carrier Security PIN</span>
+                                <span id="pass-security-pin" class="font-mono text-lg font-black tracking-widest text-emerald-400">8492</span>
+                            </div>
+                            <!-- Barcode Visual -->
+                            <div class="hidden sm:flex flex-col items-center opacity-70">
+                                <div class="flex items-center gap-0.5 h-10 px-2 bg-white/5 py-1">
+                                    <div class="w-1 h-full bg-white"></div>
+                                    <div class="w-0.5 h-full bg-white"></div>
+                                    <div class="w-1.5 h-full bg-white"></div>
+                                    <div class="w-0.5 h-full bg-white"></div>
+                                    <div class="w-2 h-full bg-white"></div>
+                                    <div class="w-1 h-full bg-white"></div>
+                                    <div class="w-0.5 h-full bg-white"></div>
+                                    <div class="w-1.5 h-full bg-white"></div>
+                                    <div class="w-0.5 h-full bg-white"></div>
+                                    <div class="w-1 h-full bg-white"></div>
+                                    <div class="w-2 h-full bg-white"></div>
+                                    <div class="w-0.5 h-full bg-white"></div>
+                                </div>
+                                <span class="text-[8px] font-mono tracking-widest text-on-surface-variant/60 mt-0.5">KT-LOG-PASS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons Grid -->
+            <div class="flex flex-wrap items-center justify-center gap-3 pt-6 border-t border-white/5 no-print">
+                <button type="button" onclick="startRescheduleCurrentDelivery()" class="w-full sm:w-auto bg-primary-container hover:bg-red-700 text-white font-headline text-xs font-bold tracking-[0.2em] uppercase px-8 py-4 transition-all duration-300 shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2 cursor-pointer">
+                    <span class="material-symbols-outlined text-base">event_repeat</span>
+                    RESCHEDULE APPOINTMENT
+                </button>
+                <button type="button" onclick="startEditCurrentDeliveryDetails()" class="w-full sm:w-auto border border-outline-variant/60 hover:border-primary text-on-surface hover:text-primary font-headline text-xs font-bold tracking-[0.2em] uppercase px-6 py-4 transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                    <span class="material-symbols-outlined text-base">edit_note</span>
+                    EDIT ADDRESS / NOTES
+                </button>
+                <button type="button" onclick="window.print()" class="w-full sm:w-auto border border-outline-variant/60 hover:border-primary text-on-surface hover:text-primary font-headline text-xs font-bold tracking-[0.2em] uppercase px-6 py-4 transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                    <span class="material-symbols-outlined text-base">print</span>
+                    PRINT PASS
+                </button>
+                <button type="button" onclick="switchToNewRegistrationView()" class="w-full sm:w-auto border border-outline-variant/60 hover:border-white text-on-surface hover:text-white font-headline text-xs font-bold tracking-[0.2em] uppercase px-6 py-4 transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                    <span class="material-symbols-outlined text-base">add_shopping_cart</span>
+                    NEW VEHICLE ORDER
+                </button>
+                <button type="button" onclick="cancelCurrentOrderRegistration()" class="w-full sm:w-auto text-on-surface-variant/60 hover:text-error font-headline text-xs font-bold tracking-[0.15em] uppercase px-4 py-4 transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span class="material-symbols-outlined text-base">cancel</span>
+                    CANCEL REGISTRATION
+                </button>
+            </div>
+
+            <!-- Other / All Scheduled Registrations List -->
+            <div id="step5-all-orders-section" class="mt-12 pt-8 border-t border-white/5 hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">All Scheduled Deliveries</h3>
+                    <span id="step5-orders-count" class="text-[10px] font-mono text-primary font-bold"></span>
+                </div>
+                <div id="step5-orders-list" class="space-y-4"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 w-full z-50 bg-[#131313]/90 backdrop-blur-xl border-t border-white/5 flex justify-around items-center h-20 px-5 shadow-[0_-10px_40px_rgba(204,0,0,0.15)] no-print">
+        <a class="flex flex-col items-center justify-center text-outline hover:text-primary active:scale-90 transition-transform duration-200" href="home.html">
+            <span class="material-symbols-outlined">home</span>
+            <span class="font-['Inter'] text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Home</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-outline hover:text-primary active:scale-90 transition-transform duration-200" href="vehicles.html">
+            <span class="material-symbols-outlined">directions_car</span>
+            <span class="font-['Inter'] text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Models</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-outline hover:text-primary active:scale-90 transition-transform duration-200" href="search.html">
+            <span class="material-symbols-outlined">search</span>
+            <span class="font-['Inter'] text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Search</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-primary-container drop-shadow-[0_0_12px_rgba(204,0,0,0.9)] active:scale-90 transition-transform duration-200" href="orders.html">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+            <span class="font-['Inter'] text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Orders</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-outline hover:text-primary active:scale-90 transition-transform duration-200" href="profile.html">
+            <span class="material-symbols-outlined">person</span>
+            <span class="font-['Inter'] text-[10px] uppercase tracking-[0.15em] mt-1 font-bold">Profile</span>
+        </a>
+    </nav>
+
+    <!-- Cloud Database & Multi-User Engine -->
+    <script src="cloud-sync.js"></script>
+    <!-- JavaScript Logic -->
+    <script>
+        // US States Dataset
+        const US_STATES = [
+            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+            "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
+            "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan",
+            "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
+            "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio",
+            "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+            "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia",
+            "Wisconsin", "Wyoming"
+        ];
+
+        const TIME_SLOTS = [
+            "9:00 AM",
+            "10:30 AM",
+            "12:00 PM",
+            "1:30 PM",
+            "3:00 PM",
+            "4:30 PM"
+        ];
+
+        const MONTH_NAMES = [
+            "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+            "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+        ];
+
+        // Primary Delivery State
+        let deliveryState = {
+            currentStep: 1,
+            vehicle: null,
+            location: {
+                method: 'pickup',
+                country: 'United States',
+                state: '',
+                city: '',
+                street: '',
+                zip: '',
+                notes: ''
+            },
+            details: {
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                dob: '',
+                license: '',
+                contactMethod: 'email'
+            },
+            schedule: {
+                date: null,
+                time: null
+            }
+        };
+
+        // Reschedule & Edit Session State
+        let isRescheduling = false;
+        let rescheduleRef = null;
+        let isEditingDetails = false;
+        let activeOrderRef = null;
+        let toastTimer = null;
+
+        // Calendar Navigation State
+        const todayRef = new Date();
+        const baseYear = todayRef.getFullYear();
+        const baseMonth = todayRef.getMonth(); // 0-indexed
+        let calYear = baseYear;
+        let calMonth = baseMonth;
+
+        const maxBoundDate = new Date(baseYear, baseMonth + 2, 1);
+        const maxBoundYear = maxBoundDate.getFullYear();
+        const maxBoundMonth = maxBoundDate.getMonth();
+
+        // ==================== STORAGE HELPERS ====================
+        function getOrders() {
+            try {
+                const raw = localStorage.getItem('kineticOrders');
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (e) {
+                console.error("Error reading kineticOrders:", e);
+                return [];
+            }
+        }
+
+        function saveOrders(orders) {
+            try {
+                localStorage.setItem('kineticOrders', JSON.stringify(orders));
+                if (window.KineticCloud) {
+                    window.KineticCloud.syncCloud();
+                }
+            } catch (e) {
+                console.error("Error writing kineticOrders:", e);
+            }
+        }
+
+        function getActiveOrder() {
+            const orders = getOrders();
+            if (orders.length === 0) return null;
+
+            if (activeOrderRef) {
+                const match = orders.find(o => o.reference === activeOrderRef);
+                if (match) return match;
+            }
+
+            const storedActiveId = localStorage.getItem('kineticActiveOrderId');
+            if (storedActiveId) {
+                const match = orders.find(o => o.reference === storedActiveId);
+                if (match) return match;
+            }
+
+            return orders[0];
+        }
+
+        function generateSecurityPin(ref) {
+            if (!ref) return "8492";
+            let hash = 0;
+            for (let i = 0; i < ref.length; i++) {
+                hash = (hash * 31 + ref.charCodeAt(i)) % 9000;
+            }
+            return String(1000 + Math.abs(hash));
+        }
+
+        // ==================== TOAST NOTIFICATION ====================
+        function showToast(title, message, icon = 'check_circle', isError = false) {
+            const toast = document.getElementById('toast-notification');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            if (!toast) return;
+
+            if (toastTimer) clearTimeout(toastTimer);
+
+            toastTitle.textContent = title;
+            toastMsg.textContent = message;
+            toastIcon.textContent = icon;
+
+            if (isError) {
+                toast.classList.remove('border-l-emerald-400');
+                toast.classList.add('border-l-error');
+                toastIcon.className = "material-symbols-outlined text-error text-xl";
+            } else {
+                toast.classList.remove('border-l-error');
+                toast.classList.add('border-l-emerald-400');
+                toastIcon.className = "material-symbols-outlined text-emerald-400 text-xl";
+            }
+
+            toast.classList.remove('translate-x-[150%]', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-x-0', 'opacity-100');
+
+            toastTimer = setTimeout(() => {
+                toast.classList.add('translate-x-[150%]', 'opacity-0', 'pointer-events-none');
+                toast.classList.remove('translate-x-0', 'opacity-100');
+            }, 3500);
+        }
+
+        // ==================== INITIALIZATION ====================
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+
+        function initApp() {
+            populateStatesDropdown();
+
+            if (window.KineticCloud) {
+                window.KineticCloud.init();
+            }
+
+            // Check if user has scheduled orders in localStorage
+            const orders = getOrders();
+            const cloudCart = (window.KineticCloud && typeof window.KineticCloud.getCart === 'function') ? window.KineticCloud.getCart() : null;
+            const rawCart = localStorage.getItem('kineticCart');
+            const hasCartVehicle = Boolean(cloudCart || (rawCart && rawCart !== 'null' && rawCart !== '{}'));
+
+            // Restore draft inputs from sessionStorage if available
+            try {
+                const savedState = sessionStorage.getItem('kineticDeliveryState');
+                if (savedState) {
+                    const parsed = JSON.parse(savedState);
+                    if (parsed && typeof parsed === 'object') {
+                        deliveryState = { ...deliveryState, ...parsed };
+                    }
+                }
+            } catch (e) {
+                console.error("Error reading kineticDeliveryState:", e);
+            }
+
+            // Pre-seed VIP account defaults if Diov Carbonell is logged in
+            if (window.KineticCloud && window.KineticCloud.isVipActive()) {
+                const vip = window.KineticCloud.vipAccount;
+                if (!deliveryState.details.firstName) deliveryState.details.firstName = vip.firstName;
+                if (!deliveryState.details.lastName) deliveryState.details.lastName = vip.lastName;
+                if (!deliveryState.details.email) deliveryState.details.email = vip.email;
+                if (!deliveryState.details.phone) deliveryState.details.phone = vip.phone;
+                if (!deliveryState.details.license) deliveryState.details.license = vip.license;
+
+                if (!deliveryState.location.state) deliveryState.location.state = vip.defaultLocation.state;
+                if (!deliveryState.location.city) deliveryState.location.city = vip.defaultLocation.city;
+                if (!deliveryState.location.street) deliveryState.location.street = vip.defaultLocation.street;
+                if (!deliveryState.location.zip) deliveryState.location.zip = vip.defaultLocation.zip;
+                if (!deliveryState.location.notes) deliveryState.location.notes = vip.defaultLocation.notes;
+            }
+
+            restoreFormValues();
+
+            if (orders.length > 0) {
+                // Update tabs & selector
+                updateViewTabsUI(orders);
+
+                if (!hasCartVehicle) {
+                    // No vehicle currently in cart: automatically open Step 5 to view scheduled delivery!
+                    const activeOrder = getActiveOrder();
+                    if (activeOrder) {
+                        viewOrderConfirmation(activeOrder, false);
+                        renderPastOrders();
+                        return;
+                    }
+                } else {
+                    // User has a cart vehicle AND saved orders: load cart vehicle into Step 1,
+                    // but show alert banner allowing 1-click jump to active delivery
+                    loadCartData();
+                    deliveryState.currentStep = 1;
+                    showActiveOrderAlert(orders[0]);
+                }
+            } else {
+                // No saved orders
+                hideViewTabsUI();
+                loadCartData();
+                deliveryState.currentStep = 1;
+            }
+
+            renderCurrentStepView();
+            updateStepperUI();
+            renderCalendar();
+            renderPastOrders();
+        }
+
+        function updateViewTabsUI(orders) {
+            const tabsWrap = document.getElementById('delivery-view-tabs');
+            const countBadge = document.getElementById('tab-orders-count-badge');
+            const selectorWrap = document.getElementById('multi-order-selector-wrap');
+            const selector = document.getElementById('order-selector-select');
+
+            if (!tabsWrap) return;
+
+            tabsWrap.classList.remove('hidden');
+            if (countBadge) countBadge.textContent = orders.length;
+
+            if (orders.length > 1 && selectorWrap && selector) {
+                selectorWrap.classList.remove('hidden');
+                selector.innerHTML = '';
+                orders.forEach(ord => {
+                    const opt = document.createElement('option');
+                    opt.value = ord.reference;
+                    const vName = ord.vehicle?.name || 'Tesla';
+                    const vDate = ord.schedule?.date || 'Confirmed';
+                    opt.textContent = `${ord.reference} (${vName} — ${vDate})`;
+                    if (activeOrderRef && ord.reference === activeOrderRef) {
+                        opt.selected = true;
+                    }
+                    selector.appendChild(opt);
+                });
+            } else if (selectorWrap) {
+                selectorWrap.classList.add('hidden');
+            }
+        }
+
+        function hideViewTabsUI() {
+            const tabsWrap = document.getElementById('delivery-view-tabs');
+            const alertBanner = document.getElementById('active-order-alert-banner');
+            if (tabsWrap) tabsWrap.classList.add('hidden');
+            if (alertBanner) alertBanner.classList.add('hidden');
+        }
+
+        function showActiveOrderAlert(order) {
+            const banner = document.getElementById('active-order-alert-banner');
+            const bannerText = document.getElementById('alert-banner-text');
+            if (!banner || !order) return;
+
+            banner.classList.remove('hidden');
+            if (bannerText) {
+                const vName = order.vehicle?.name || 'Tesla';
+                const sDate = order.schedule?.date || 'Scheduled';
+                bannerText.textContent = `Ref #${order.reference} • ${vName} (${sDate})`;
+            }
+        }
+
+        // ==================== CART HANDLING ====================
+        function formatVehiclePrice(val) {
+            if (val === null || val === undefined || val === '') return '$61,000';
+            if (typeof val === 'number') {
+                return '$' + val.toLocaleString('en-US');
+            }
+            const str = String(val).trim();
+            if (str.includes('CLEARED') || str.includes('PAID')) return str;
+            if (str.startsWith('$')) return str;
+            const num = parseFloat(str.replace(/[^0-9.]/g, ''));
+            return isNaN(num) ? str : '$' + num.toLocaleString('en-US');
+        }
+
+        function loadCartData() {
+            try {
+                let rawCart = localStorage.getItem('kineticCart');
+                if ((!rawCart || rawCart === 'null' || rawCart === '{}') && window.KineticCloud && typeof window.KineticCloud.getCart === 'function') {
+                    const cloudCart = window.KineticCloud.getCart();
+                    if (cloudCart) rawCart = JSON.stringify(cloudCart);
+                }
+
+                if (rawCart) {
+                    const parsed = JSON.parse(rawCart);
+                    const item = Array.isArray(parsed) ? parsed[0] : parsed;
+                    if (item && (item.name || item.title || item.model)) {
+                        let vName = item.name || item.title || item.model || "Model Y";
+                        let vPrice = item.price || item.originalPrice || "$61,000";
+                        let vOrig = item.originalPrice || item.cancelledPrice || item.msrp || "$61,000";
+                        let vImage = item.image || item.img || "Silver Electric Crossover in Dark Studio.png";
+
+                        // Normalization for Model Y: Real Price $61,000. Diov Carbonell: Cancelled and CLEARED/PAID FOR
+                        if (vName.toLowerCase().includes('model y')) {
+                            const activeEmail = (window.KineticCloud && window.KineticCloud.getActiveUserEmail ? window.KineticCloud.getActiveUserEmail() : localStorage.getItem('kinetic_user_email')) || '';
+                            const isDiov = activeEmail.toLowerCase().includes('diovcarbonell') || item.isPaid || (item.price && String(item.price).includes('CLEARED'));
+                            vOrig = '$61,000';
+                            vImage = 'Silver Electric Crossover in Dark Studio.png';
+                            item.name = 'Model Y';
+                            item.originalPrice = '$61,000';
+                            item.cancelledPrice = '$61,000';
+                            item.image = vImage;
+                            if (isDiov) {
+                                vPrice = 'CLEARED/PAID FOR';
+                                item.price = 'CLEARED/PAID FOR';
+                                item.isPaid = true;
+                                item.status = 'CLEARED/PAID FOR';
+                            } else {
+                                vPrice = '$61,000';
+                                item.price = '$61,000';
+                                item.isPaid = false;
+                            }
+                            try {
+                                localStorage.setItem('kineticCart', JSON.stringify(item));
+                            } catch(e) {}
+                        }
+
+                        deliveryState.vehicle = {
+                            name: vName,
+                            variant: item.variant || item.subtitle || item.trim || "Performance • All-Wheel Drive",
+                            image: vImage,
+                            color: item.color || item.paint || "Stealth Grey",
+                            wheels: item.wheels || item.wheel || "21\" Überturbine Wheels",
+                            interior: item.interior || "All Black Premium",
+                            originalPrice: formatVehiclePrice(vOrig),
+                            cancelledPrice: item.cancelledPrice || formatVehiclePrice(vOrig),
+                            price: formatVehiclePrice(vPrice),
+                            isPaid: item.isPaid || (String(vPrice).includes('CLEARED') || String(vPrice).includes('PAID'))
+                        };
+                    } else {
+                        deliveryState.vehicle = null;
+                    }
+                } else {
+                    deliveryState.vehicle = null;
+                }
+            } catch (e) {
+                console.error("Error reading kineticCart:", e);
+                deliveryState.vehicle = null;
+            }
+
+            renderCart();
+        }
+
+        function renderCart() {
+            const emptyView = document.getElementById('cart-empty-view');
+            const filledView = document.getElementById('cart-filled-view');
+
+            if (!deliveryState.vehicle) {
+                if (emptyView) emptyView.classList.remove('hidden');
+                if (filledView) filledView.classList.add('hidden');
+            } else {
+                if (emptyView) emptyView.classList.add('hidden');
+                if (filledView) filledView.classList.remove('hidden');
+
+                const v = deliveryState.vehicle;
+                document.getElementById('cart-vehicle-image').src = v.image;
+                document.getElementById('cart-vehicle-name').textContent = v.name;
+                document.getElementById('cart-vehicle-variant').textContent = v.variant;
+                const origEl = document.getElementById('cart-vehicle-orig-price');
+                if (origEl) origEl.textContent = v.originalPrice;
+
+                const priceEl = document.getElementById('cart-vehicle-price');
+                const activeEmail = (window.KineticCloud && window.KineticCloud.getActiveUserEmail ? window.KineticCloud.getActiveUserEmail() : localStorage.getItem('kinetic_user_email')) || '';
+                const isDiovUser = activeEmail.toLowerCase().includes('diovcarbonell');
+                if (v.isPaid || v.price === 'CLEARED/PAID FOR' || (v.price && v.price.includes('CLEARED')) || (isDiovUser && v.name && v.name.toLowerCase().includes('model y'))) {
+                    priceEl.innerHTML = `<del class="line-through text-white/40 text-xl sm:text-2xl mr-2 font-normal">${v.cancelledPrice || v.originalPrice || '$61,000'}</del><span class="text-emerald-400 font-black">CLEARED/PAID FOR</span>`;
+                } else {
+                    priceEl.textContent = v.price || '$61,000';
+                }
+
+                document.getElementById('cart-vehicle-color').textContent = v.color;
+                document.getElementById('cart-vehicle-wheels').textContent = v.wheels;
+                document.getElementById('cart-vehicle-interior').textContent = v.interior;
+            }
+        }
+
+        function removeFromCart() {
+            if (window.KineticCloud && typeof window.KineticCloud.setCart === 'function') {
+                window.KineticCloud.setCart(null);
+            } else {
+                localStorage.removeItem('kineticCart');
+            }
+            deliveryState.vehicle = null;
+            sessionStorage.removeItem('kineticDeliveryState');
+            if (window.KineticCloud) {
+                window.KineticCloud.syncCloud();
+            }
+            renderCart();
+
+            const orders = getOrders();
+            if (orders.length > 0) {
+                // If user has registered orders, navigate directly to Step 5
+                viewOrderConfirmation(orders[0]);
+                showToast("Cart Cleared", "Switched to your active scheduled delivery.", "info");
+            } else {
+                renderPastOrders();
+                showToast("Cart Cleared", "Vehicle removed from cart.", "delete");
+            }
+        }
+
+        function populateStatesDropdown() {
+            const stateSelect = document.getElementById('loc-state');
+            if (!stateSelect) return;
+            stateSelect.innerHTML = '<option value="">Select State / Region</option>';
+            US_STATES.forEach(st => {
+                const opt = document.createElement('option');
+                opt.value = st;
+                opt.textContent = st;
+                stateSelect.appendChild(opt);
+            });
+        }
+
+        function restoreFormValues() {
+            if (deliveryState.location) {
+                setDeliveryMethod(deliveryState.location.method || 'pickup', false);
+                if (deliveryState.location.country) document.getElementById('loc-country').value = deliveryState.location.country;
+                if (deliveryState.location.state) document.getElementById('loc-state').value = deliveryState.location.state;
+                if (deliveryState.location.city) document.getElementById('loc-city').value = deliveryState.location.city;
+                if (deliveryState.location.zip) document.getElementById('loc-zip').value = deliveryState.location.zip;
+                if (deliveryState.location.street) document.getElementById('loc-street').value = deliveryState.location.street;
+                if (deliveryState.location.notes) document.getElementById('loc-notes').value = deliveryState.location.notes;
+            }
+
+            if (deliveryState.details) {
+                if (deliveryState.details.firstName) document.getElementById('det-first-name').value = deliveryState.details.firstName;
+                if (deliveryState.details.lastName) document.getElementById('det-last-name').value = deliveryState.details.lastName;
+                if (deliveryState.details.email) document.getElementById('det-email').value = deliveryState.details.email;
+                if (deliveryState.details.phone) document.getElementById('det-phone').value = deliveryState.details.phone;
+                if (deliveryState.details.dob) document.getElementById('det-dob').value = deliveryState.details.dob;
+                if (deliveryState.details.license) document.getElementById('det-license').value = deliveryState.details.license;
+                setContactPreference(deliveryState.details.contactMethod || 'email', false);
+            }
+        }
+
+        function saveState() {
+            try {
+                sessionStorage.setItem('kineticDeliveryState', JSON.stringify(deliveryState));
+            } catch (e) {
+                console.error("Error saving kineticDeliveryState:", e);
+            }
+        }
+
+        function autoSaveDraft() {
+            if (isEditingDetails) return;
+            saveState();
+        }
+
+        // ==================== NAVIGATION & STEP TRANSITIONS ====================
+        function goToStep(targetStep) {
+            // Check if jumping directly to Step 5
+            if (targetStep === 5) {
+                const activeOrder = getActiveOrder();
+                if (activeOrder) {
+                    viewOrderConfirmation(activeOrder);
+                    return;
+                } else if (!deliveryState.schedule.date || !deliveryState.schedule.time) {
+                    showToast("No Booking Found", "Please choose a delivery date & time slot first.", "warning", true);
+                    return;
+                }
+            }
+
+            // Can't go beyond step 1 if cart is empty and no vehicle
+            if (!deliveryState.vehicle && targetStep > 1) {
+                const orders = getOrders();
+                if (orders.length > 0) {
+                    viewOrderConfirmation(orders[0]);
+                    return;
+                }
+                showToast("Cart Empty", "Please select a vehicle to proceed.", "shopping_cart", true);
+                return;
+            }
+
+            // Validations when advancing forward
+            if (targetStep > deliveryState.currentStep) {
+                if (deliveryState.currentStep === 2) {
+                    if (!validateStep2()) return;
+                } else if (deliveryState.currentStep === 3) {
+                    if (!validateStep3()) return;
+                } else if (deliveryState.currentStep === 4) {
+                    if (!deliveryState.schedule.date || !deliveryState.schedule.time) {
+                        showToast("Selection Needed", "Please select an available delivery date and time slot.", "calendar_month", true);
+                        return;
+                    }
+                }
+            }
+
+            deliveryState.currentStep = targetStep;
+            saveState();
+
+            renderCurrentStepView();
+            updateStepperUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderCurrentStepView() {
+            for (let i = 1; i <= 5; i++) {
+                const section = document.getElementById(`step-${i}`);
+                if (section) {
+                    if (i === deliveryState.currentStep) {
+                        section.classList.remove('hidden');
+                        section.classList.add('step-transition');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                }
+            }
+
+            if (deliveryState.currentStep === 4) {
+                renderCalendar();
+                if (deliveryState.schedule.date) {
+                    renderTimeSlots();
+                }
+            }
+        }
+
+        function updateStepperUI() {
+            const current = deliveryState.currentStep;
+
+            for (let i = 1; i <= 5; i++) {
+                const circle = document.getElementById(`stepper-circle-${i}`);
+                const label = document.getElementById(`stepper-label-${i}`);
+                const line = document.getElementById(`stepper-line-${i}`);
+
+                if (!circle) continue;
+
+                if (i < current) {
+                    // Completed Step
+                    circle.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-primary-container text-white transition-all shadow-md shadow-primary-container/20";
+                    circle.innerHTML = `<span class="material-symbols-outlined text-base sm:text-lg">check</span>`;
+                    if (label) {
+                        label.className = "font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2 text-primary hidden sm:block";
+                    }
+                } else if (i === current) {
+                    // Current Step
+                    circle.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-primary-container text-white ring-4 ring-primary-container/20 ring-offset-2 ring-offset-surface transition-all shadow-lg shadow-primary-container/30";
+                    circle.innerHTML = `<span class="material-symbols-outlined text-base sm:text-lg">${getStepIcon(i)}</span>`;
+                    if (label) {
+                        label.className = "font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2 text-white hidden sm:block";
+                    }
+                } else {
+                    // Future Step
+                    circle.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm bg-surface-container-high text-on-surface-variant/40 border border-outline-variant/30 transition-all";
+                    circle.innerHTML = `<span class="material-symbols-outlined text-base sm:text-lg">${getStepIcon(i)}</span>`;
+                    if (label) {
+                        label.className = "font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2 text-on-surface-variant/40 hidden sm:block";
+                    }
+                }
+
+                // Connecting Lines
+                if (line) {
+                    if (i < current) {
+                        line.className = "flex-1 h-0.5 mx-1 sm:mx-2 bg-primary-container transition-colors duration-300";
+                    } else {
+                        line.className = "flex-1 h-0.5 mx-1 sm:mx-2 bg-surface-container-high transition-colors duration-300";
+                    }
+                }
+            }
+        }
+
+        function getStepIcon(stepNumber) {
+            switch (stepNumber) {
+                case 1: return "shopping_cart";
+                case 2: return "location_on";
+                case 3: return "person";
+                case 4: return "calendar_month";
+                case 5: return "check_circle";
+                default: return "circle";
+            }
+        }
+
+        // ==================== VIEW SWITCHER (SCHEDULED vs NEW) ====================
+        function switchToScheduledView() {
+            const activeOrder = getActiveOrder();
+            if (activeOrder) {
+                viewOrderConfirmation(activeOrder);
+            } else {
+                showToast("No Scheduled Deliveries", "You have not completed any delivery registrations yet.", "info");
+            }
+        }
+
+        function switchToNewRegistrationView() {
+            // Cancel any active reschedule or edit modes
+            if (isRescheduling) cancelReschedule();
+            if (isEditingDetails) cancelEditDetails();
+
+            loadCartData();
+            deliveryState.currentStep = 1;
+
+            const tabScheduled = document.getElementById('tab-btn-scheduled');
+            const tabNew = document.getElementById('tab-btn-new');
+            if (tabScheduled) {
+                tabScheduled.className = "flex-1 sm:flex-none px-4 py-2.5 font-headline text-xs font-bold uppercase tracking-wider bg-surface-container-high text-on-surface hover:text-white transition-all flex items-center justify-center gap-2";
+            }
+            if (tabNew) {
+                tabNew.className = "flex-1 sm:flex-none px-4 py-2.5 font-headline text-xs font-bold uppercase tracking-wider bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-md";
+            }
+
+            renderCurrentStepView();
+            updateStepperUI();
+            renderPastOrders();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchActiveOrder(ref) {
+            if (!ref) return;
+            viewOrderConfirmation(ref);
+        }
+
+        // ==================== STEP 2: LOCATION LOGIC ====================
+        function setDeliveryMethod(method, save = true) {
+            deliveryState.location.method = method;
+            const pickupCard = document.getElementById('method-card-pickup');
+            const homeCard = document.getElementById('method-card-home');
+
+            if (method === 'pickup') {
+                if (pickupCard) pickupCard.className = "cursor-pointer p-5 bg-surface-container-high border-l-4 border-l-primary-container border border-outline-variant/60 shadow-lg shadow-black/40 transition-all";
+                if (homeCard) homeCard.className = "cursor-pointer p-5 bg-surface-container-low border border-outline-variant/30 hover:bg-surface-container-high/60 transition-all";
+                if (pickupCard?.querySelector('.material-symbols-outlined')) pickupCard.querySelector('.material-symbols-outlined').className = "material-symbols-outlined text-primary text-2xl";
+                if (homeCard?.querySelector('.material-symbols-outlined')) homeCard.querySelector('.material-symbols-outlined').className = "material-symbols-outlined text-on-surface-variant text-2xl";
+            } else {
+                if (homeCard) homeCard.className = "cursor-pointer p-5 bg-surface-container-high border-l-4 border-l-primary-container border border-outline-variant/60 shadow-lg shadow-black/40 transition-all";
+                if (pickupCard) pickupCard.className = "cursor-pointer p-5 bg-surface-container-low border border-outline-variant/30 hover:bg-surface-container-high/60 transition-all";
+                if (homeCard?.querySelector('.material-symbols-outlined')) homeCard.querySelector('.material-symbols-outlined').className = "material-symbols-outlined text-primary text-2xl";
+                if (pickupCard?.querySelector('.material-symbols-outlined')) pickupCard.querySelector('.material-symbols-outlined').className = "material-symbols-outlined text-on-surface-variant text-2xl";
+            }
+
+            if (save) saveState();
+        }
+
+        function validateStep2() {
+            let isValid = true;
+            let firstInvalid = null;
+
+            const country = document.getElementById('loc-country').value.trim();
+            const state = document.getElementById('loc-state').value.trim();
+            const city = document.getElementById('loc-city').value.trim();
+            const street = document.getElementById('loc-street').value.trim();
+            const zip = document.getElementById('loc-zip').value.trim();
+            const notes = document.getElementById('loc-notes').value.trim();
+
+            if (!country) {
+                markFieldError('loc-country', 'err-loc-country');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'loc-country';
+            }
+
+            if (!state) {
+                markFieldError('loc-state', 'err-loc-state');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'loc-state';
+            }
+
+            if (!city) {
+                markFieldError('loc-city', 'err-loc-city');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'loc-city';
+            }
+
+            if (!street) {
+                markFieldError('loc-street', 'err-loc-street');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'loc-street';
+            }
+
+            const zipRegex = /^\d{5}(-\d{4})?$/;
+            if (!zip || !zipRegex.test(zip)) {
+                markFieldError('loc-zip', 'err-loc-zip');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'loc-zip';
+            }
+
+            if (isValid) {
+                deliveryState.location.country = country;
+                deliveryState.location.state = state;
+                deliveryState.location.city = city;
+                deliveryState.location.street = street;
+                deliveryState.location.zip = zip;
+                deliveryState.location.notes = notes;
+                saveState();
+            } else if (firstInvalid) {
+                const el = document.getElementById(firstInvalid);
+                if (el) el.focus();
+            }
+
+            return isValid;
+        }
+
+        // ==================== STEP 3: DETAILS LOGIC ====================
+        function setContactPreference(method, save = true) {
+            deliveryState.details.contactMethod = method;
+
+            ['email', 'phone', 'sms'].forEach(m => {
+                const chip = document.getElementById(`contact-chip-${m}`);
+                if (!chip) return;
+                if (m === method) {
+                    chip.className = "py-3 px-4 text-center font-headline text-xs font-bold uppercase tracking-wider bg-primary-container text-white border border-primary-container shadow-md shadow-primary-container/20 transition-all";
+                } else {
+                    chip.className = "py-3 px-4 text-center font-headline text-xs font-bold uppercase tracking-wider bg-surface-container-low text-on-surface-variant border border-outline-variant/30 hover:text-white transition-all";
+                }
+            });
+
+            if (save) saveState();
+        }
+
+        function validateStep3() {
+            let isValid = true;
+            let firstInvalid = null;
+
+            const firstName = document.getElementById('det-first-name').value.trim();
+            const lastName = document.getElementById('det-last-name').value.trim();
+            const email = document.getElementById('det-email').value.trim();
+            const phone = document.getElementById('det-phone').value.trim();
+            const dob = document.getElementById('det-dob').value.trim();
+            const license = document.getElementById('det-license').value.trim();
+
+            if (!firstName) {
+                markFieldError('det-first-name', 'err-det-first-name');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'det-first-name';
+            }
+
+            if (!lastName) {
+                markFieldError('det-last-name', 'err-det-last-name');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'det-last-name';
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                markFieldError('det-email', 'err-det-email');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'det-email';
+            }
+
+            const phoneClean = phone.replace(/[^0-9]/g, '');
+            if (!phone || phoneClean.length < 7) {
+                markFieldError('det-phone', 'err-det-phone');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'det-phone';
+            }
+
+            if (!dob) {
+                markFieldError('det-dob', 'err-det-dob');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'det-dob';
+            }
+
+            if (!license) {
+                markFieldError('det-license', 'err-det-license');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = 'det-license';
+            }
+
+            if (isValid) {
+                deliveryState.details.firstName = firstName;
+                deliveryState.details.lastName = lastName;
+                deliveryState.details.email = email;
+                deliveryState.details.phone = phone;
+                deliveryState.details.dob = dob;
+                deliveryState.details.license = license;
+                saveState();
+            } else if (firstInvalid) {
+                const el = document.getElementById(firstInvalid);
+                if (el) el.focus();
+            }
+
+            return isValid;
+        }
+
+        function markFieldError(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            if (input) {
+                input.classList.remove('border-outline-variant/30');
+                input.classList.add('border-error', 'shake-error');
+                setTimeout(() => input.classList.remove('shake-error'), 400);
+            }
+            if (error) error.classList.remove('hidden');
+        }
+
+        function clearFieldError(inputId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(`err-${inputId}`);
+            if (input) {
+                input.classList.remove('border-error');
+                input.classList.add('border-outline-variant/30');
+            }
+            if (error) error.classList.add('hidden');
+        }
+
+        // ==================== STEP 4: SCHEDULE & CALENDAR ====================
+        function prevMonth() {
+            if (calYear === baseYear && calMonth === baseMonth) return;
+            calMonth--;
+            if (calMonth < 0) {
+                calMonth = 11;
+                calYear--;
+            }
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            if (calYear === maxBoundYear && calMonth === maxBoundMonth) return;
+            calMonth++;
+            if (calMonth > 11) {
+                calMonth = 0;
+                calYear++;
+            }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const monthTitle = document.getElementById('cal-month-title');
+            const prevBtn = document.getElementById('cal-prev-btn');
+            const nextBtn = document.getElementById('cal-next-btn');
+            const grid = document.getElementById('calendar-grid');
+
+            if (!monthTitle || !grid) return;
+
+            monthTitle.textContent = `${MONTH_NAMES[calMonth]} ${calYear}`;
+
+            prevBtn.disabled = (calYear === baseYear && calMonth === baseMonth);
+            nextBtn.disabled = (calYear === maxBoundYear && calMonth === maxBoundMonth);
+
+            grid.innerHTML = '';
+
+            const firstDayIndex = new Date(calYear, calMonth, 1).getDay();
+            const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+            // Leading blanks
+            for (let i = 0; i < firstDayIndex; i++) {
+                const blank = document.createElement('div');
+                blank.className = "aspect-square";
+                grid.appendChild(blank);
+            }
+
+            const todayMidnight = new Date(todayRef.getFullYear(), todayRef.getMonth(), todayRef.getDate()).getTime();
+
+            // Day cells
+            for (let day = 1; day <= daysInMonth; day++) {
+                const thisDate = new Date(calYear, calMonth, day);
+                const thisTime = thisDate.getTime();
+                const dateKey = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+                const isPast = thisTime < todayMidnight;
+                const isToday = thisTime === todayMidnight;
+                const isAvail = ((day * 7 + (calMonth + 1) * 13) % 10 > 2);
+                const isSelected = deliveryState.schedule.date === dateKey;
+
+                const cell = document.createElement('div');
+                cell.className = "aspect-square flex items-center justify-center font-headline text-xs font-bold transition-all";
+
+                if (isPast) {
+                    cell.classList.add('opacity-25', 'cursor-not-allowed', 'text-on-surface-variant/40');
+                    cell.textContent = day;
+                } else if (!isAvail) {
+                    cell.classList.add('opacity-30', 'cursor-not-allowed', 'line-through', 'text-on-surface-variant/50', 'bg-surface-container-lowest/40');
+                    cell.textContent = day;
+                    cell.title = "Logistics Allocation Unavailable";
+                } else if (isSelected) {
+                    cell.classList.add('bg-primary-container', 'text-white', 'shadow-md', 'shadow-primary-container/30', 'cursor-pointer');
+                    cell.textContent = day;
+                } else {
+                    cell.classList.add('bg-surface-container-low', 'hover:bg-surface-container-high', 'text-on-surface', 'cursor-pointer', 'border', 'border-outline-variant/20', 'hover:border-primary');
+                    if (isToday) {
+                        cell.classList.add('border-2', 'border-dashed', 'border-primary');
+                    }
+                    cell.textContent = day;
+                    cell.onclick = () => selectDate(dateKey, calYear, calMonth, day);
+                }
+
+                grid.appendChild(cell);
+            }
+        }
+
+        function selectDate(dateKey, year, month, day) {
+            deliveryState.schedule.date = dateKey;
+            deliveryState.schedule.time = null; // reset time slot when date changes
+            saveState();
+
+            renderCalendar();
+            renderTimeSlots();
+            updateScheduleContinueBtn();
+        }
+
+        function renderTimeSlots() {
+            const container = document.getElementById('time-slots-container');
+            const label = document.getElementById('time-slots-date-label');
+            const grid = document.getElementById('time-slots-grid');
+
+            if (!deliveryState.schedule.date) {
+                if (container) container.classList.add('hidden');
+                return;
+            }
+
+            if (container) container.classList.remove('hidden');
+
+            const [y, m, d] = deliveryState.schedule.date.split('-');
+            const dateObj = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = dateObj.toLocaleDateString('en-US', options);
+
+            if (label) label.textContent = `Available Slots — ${formattedDate}`;
+            if (grid) grid.innerHTML = '';
+
+            TIME_SLOTS.forEach((slot, idx) => {
+                const dayNum = parseInt(d);
+                const isSlotAvailable = (dayNum * 11 + idx * 17) % 5 !== 0;
+                const isSelected = deliveryState.schedule.time === slot;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+
+                if (!isSlotAvailable) {
+                    btn.className = "py-3 px-4 text-center font-headline text-xs font-bold tracking-wider bg-surface-container-lowest/50 border border-outline-variant/10 text-on-surface-variant/30 cursor-not-allowed line-through";
+                    btn.textContent = `${slot} (Booked)`;
+                    btn.disabled = true;
+                } else if (isSelected) {
+                    btn.className = "py-3 px-4 text-center font-headline text-xs font-bold tracking-wider bg-primary-container text-white border border-primary-container shadow-lg shadow-primary-container/20 transition-all";
+                    btn.textContent = slot;
+                } else {
+                    btn.className = "py-3 px-4 text-center font-headline text-xs font-bold tracking-wider bg-surface-container-high border border-outline-variant/30 text-on-surface hover:border-primary-container hover:text-white transition-all";
+                    btn.textContent = slot;
+                    btn.onclick = () => selectTimeSlot(slot);
+                }
+
+                if (grid) grid.appendChild(btn);
+            });
+
+            updateScheduleContinueBtn();
+        }
+
+        function selectTimeSlot(slot) {
+            deliveryState.schedule.time = slot;
+            saveState();
+            renderTimeSlots();
+            updateScheduleContinueBtn();
+        }
+
+        function updateScheduleContinueBtn() {
+            const btn = document.getElementById('schedule-continue-btn');
+            if (!btn) return;
+
+            if (deliveryState.schedule.date && deliveryState.schedule.time) {
+                btn.disabled = false;
+                btn.className = "w-full sm:w-auto bg-primary-container hover:bg-red-700 text-white px-10 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2 cursor-pointer";
+                btn.innerHTML = isRescheduling
+                    ? `<span>CONFIRM RESCHEDULE</span><span class="material-symbols-outlined text-base">check</span>`
+                    : `<span>CONFIRM & REGISTER</span><span class="material-symbols-outlined text-base">check</span>`;
+            } else {
+                btn.disabled = true;
+                btn.className = "w-full sm:w-auto bg-primary-container text-white px-10 py-4 font-headline text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2 opacity-40 cursor-not-allowed";
+                btn.innerHTML = isRescheduling
+                    ? `<span>CONFIRM RESCHEDULE</span><span class="material-symbols-outlined text-base">check</span>`
+                    : `<span>CONFIRM & REGISTER</span><span class="material-symbols-outlined text-base">check</span>`;
+            }
+        }
+
+        // ==================== SUBMISSION / BOOKING ====================
+        function submitSchedule() {
+            if (!deliveryState.schedule.date || !deliveryState.schedule.time) {
+                showToast("Incomplete Appointment", "Please select both a delivery date and an available time slot.", "warning", true);
+                return;
+            }
+
+            // Case A: Rescheduling an existing order
+            if (isRescheduling && rescheduleRef) {
+                const orders = getOrders();
+                const targetIdx = orders.findIndex(o => o.reference === rescheduleRef);
+                if (targetIdx !== -1) {
+                    orders[targetIdx].schedule = { ...deliveryState.schedule };
+                    orders[targetIdx].lastUpdated = new Date().toISOString();
+                    saveOrders(orders);
+
+                    const updatedOrder = orders[targetIdx];
+                    isRescheduling = false;
+                    rescheduleRef = null;
+
+                    const reschedBanner = document.getElementById('reschedule-mode-banner');
+                    if (reschedBanner) reschedBanner.classList.add('hidden');
+
+                    viewOrderConfirmation(updatedOrder);
+                    showToast("Appointment Rescheduled", `New delivery date: ${updatedOrder.schedule.date} at ${updatedOrder.schedule.time}.`);
+                    return;
+                }
+            }
+
+            // Case B: New Delivery Registration
+            const refSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
+            const refNumber = `KT-2026-${refSuffix}`;
+            const securityPin = generateSecurityPin(refNumber);
+
+            const finalOrder = {
+                reference: refNumber,
+                pin: securityPin,
+                vehicle: deliveryState.vehicle ? { ...deliveryState.vehicle } : {
+                    name: "Cybertruck",
+                    variant: "Cyberbeast Foundation Series",
+                    image: "cybertruck_home.jpg",
+                    color: "Matte Stealth Black",
+                    wheels: "20\" Cyber Wheels",
+                    interior: "Tactical Grey Dark",
+                    originalPrice: "$61,000",
+                    price: "$61,000"
+                },
+                location: { ...deliveryState.location },
+                details: { ...deliveryState.details },
+                schedule: { ...deliveryState.schedule },
+                timestamp: new Date().toISOString(),
+                status: "Delivery Registered"
+            };
+
+            const existingOrders = getOrders();
+            existingOrders.unshift(finalOrder); // prepend as newest
+            saveOrders(existingOrders);
+
+            // Clean up cart and draft session
+            localStorage.removeItem('kineticCart');
+            sessionStorage.removeItem('kineticDeliveryState');
+            deliveryState.vehicle = null;
+
+            // Render confirmation hub
+            viewOrderConfirmation(finalOrder);
+            showToast("Delivery Registered", `Booking confirmed under reference ${refNumber}!`);
+        }
+
+        // ==================== STEP 5: VIEW CONFIRMATION PASS HUB ====================
+        function viewOrderConfirmation(orderOrRef, scrollToTop = true) {
+            let order = null;
+            const orders = getOrders();
+
+            if (typeof orderOrRef === 'string') {
+                order = orders.find(o => o.reference === orderOrRef);
+            } else if (orderOrRef && typeof orderOrRef === 'object') {
+                order = orderOrRef;
+            }
+
+            if (!order) {
+                if (orders.length > 0) order = orders[0];
+                else return;
+            }
+
+            activeOrderRef = order.reference;
+            localStorage.setItem('kineticActiveOrderId', order.reference);
+
+            // Hide alert & reschedule banners
+            const alertBanner = document.getElementById('active-order-alert-banner');
+            const reschedBanner = document.getElementById('reschedule-mode-banner');
+            const editBanner = document.getElementById('edit-mode-banner');
+            const saveEditBtn = document.getElementById('save-details-edit-btn');
+            if (alertBanner) alertBanner.classList.add('hidden');
+            if (reschedBanner) reschedBanner.classList.add('hidden');
+            if (editBanner) editBanner.classList.add('hidden');
+            if (saveEditBtn) saveEditBtn.classList.add('hidden');
+            isRescheduling = false;
+            isEditingDetails = false;
+
+            // 1. Reference & Pass Display
+            document.getElementById('conf-ref-id').textContent = order.reference;
+            const passRef = document.getElementById('pass-ref-display');
+            if (passRef) passRef.textContent = order.reference;
+
+            const pinEl = document.getElementById('pass-security-pin');
+            if (pinEl) pinEl.textContent = order.pin || generateSecurityPin(order.reference);
+
+            // 2. Countdown / Status Pill
+            const pillText = document.getElementById('conf-countdown-text');
+            if (pillText && order.schedule?.date) {
+                const [y, m, d] = order.schedule.date.split('-');
+                const orderDate = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+                const todayMid = new Date(todayRef.getFullYear(), todayRef.getMonth(), todayRef.getDate());
+                const diffDays = Math.round((orderDate - todayMid) / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 0) {
+                    pillText.textContent = "Delivery Scheduled for Today!";
+                } else if (diffDays === 1) {
+                    pillText.textContent = "Scheduled for Tomorrow";
+                } else if (diffDays > 1) {
+                    pillText.textContent = `Scheduled in ${diffDays} Days • Live Logistics Active`;
+                } else {
+                    pillText.textContent = "Delivery Appointment Complete";
+                }
+            }
+
+            // 3. Vehicle Information
+            const v = order.vehicle || {};
+            const thumb = document.getElementById('conf-vehicle-thumb');
+            if (thumb) thumb.src = v.image || 'cybertruck_home.jpg';
+            document.getElementById('conf-vehicle-name').textContent = v.name || 'CYBERTRUCK';
+            document.getElementById('conf-vehicle-variant').textContent = v.variant || 'Foundation Series';
+            const confPriceEl = document.getElementById('conf-vehicle-price');
+            const activeEmailConf = (window.KineticCloud && window.KineticCloud.getActiveUserEmail ? window.KineticCloud.getActiveUserEmail() : localStorage.getItem('kinetic_user_email')) || '';
+            const isDiovConf = activeEmailConf.toLowerCase().includes('diovcarbonell');
+            if (v.isPaid || (v.price && String(v.price).includes('CLEARED')) || (isDiovConf && v.name && String(v.name).toLowerCase().includes('model y'))) {
+                confPriceEl.innerHTML = `<del class="line-through text-white/40 mr-1.5 font-normal">${v.cancelledPrice || v.originalPrice || '$61,000'}</del><span class="text-emerald-400 font-black">CLEARED/PAID FOR</span>`;
+            } else {
+                confPriceEl.textContent = v.price || '$61,000';
+            }
+
+            // 4. Fulfillment Location
+            const loc = order.location || {};
+            const methodText = loc.method === 'home' ? 'Direct Home Delivery' : 'Pickup (Regional Delivery Hub)';
+            document.getElementById('conf-method').textContent = methodText;
+            document.getElementById('conf-address').textContent = `${loc.street || ''}, ${loc.city || ''}, ${loc.state || ''} ${loc.zip || ''}, ${loc.country || 'United States'}`;
+
+            const notesEl = document.getElementById('conf-notes');
+            const notesContainer = document.getElementById('conf-notes-container');
+            if (notesContainer && notesEl) {
+                if (loc.notes && loc.notes.trim()) {
+                    notesEl.textContent = loc.notes;
+                    notesContainer.classList.remove('hidden');
+                } else {
+                    notesContainer.classList.add('hidden');
+                }
+            }
+
+            // 5. Customer Identity
+            const det = order.details || {};
+            document.getElementById('conf-customer-name').textContent = `${det.firstName || ''} ${det.lastName || ''}`.trim() || 'Valued Client';
+            document.getElementById('conf-customer-email').textContent = det.email || 'customer@tesla.com';
+            document.getElementById('conf-customer-phone').textContent = det.phone || 'Phone on file';
+            document.getElementById('conf-customer-license').textContent = det.license || 'Verified';
+            document.getElementById('conf-customer-contact').textContent = (det.contactMethod || 'EMAIL').toUpperCase();
+
+            // 6. Schedule Window
+            const sch = order.schedule || {};
+            if (sch.date) {
+                const [sy, sm, sd] = sch.date.split('-');
+                const dObj = new Date(parseInt(sy), parseInt(sm) - 1, parseInt(sd));
+                const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('conf-schedule-date').textContent = dObj.toLocaleDateString('en-US', opts);
+                const trackerSlot = document.getElementById('tracker-date-slot');
+                if (trackerSlot) {
+                    const shortOpts = { month: 'short', day: 'numeric' };
+                    trackerSlot.textContent = `${dObj.toLocaleDateString('en-US', shortOpts)}, ${sch.time || '10:30 AM'}`;
+                }
+            } else {
+                document.getElementById('conf-schedule-date').textContent = 'Date Confirmed';
+            }
+            document.getElementById('conf-schedule-time').textContent = sch.time || '10:30 AM EST';
+
+            // 7. Update Tabs & Selector styling
+            const tabScheduled = document.getElementById('tab-btn-scheduled');
+            const tabNew = document.getElementById('tab-btn-new');
+            if (tabScheduled) {
+                tabScheduled.className = "flex-1 sm:flex-none px-4 py-2.5 font-headline text-xs font-bold uppercase tracking-wider bg-primary-container text-white transition-all flex items-center justify-center gap-2 shadow-md";
+            }
+            if (tabNew) {
+                tabNew.className = "flex-1 sm:flex-none px-4 py-2.5 font-headline text-xs font-bold uppercase tracking-wider bg-surface-container-high text-on-surface hover:text-white transition-all flex items-center justify-center gap-2";
+            }
+
+            const selector = document.getElementById('order-selector-select');
+            if (selector && order.reference) {
+                selector.value = order.reference;
+            }
+
+            // 8. Render All Orders in Step 5 list if multiple
+            renderAllOrdersInConfirmation();
+
+            // 9. Switch to Step 5
+            deliveryState.currentStep = 5;
+            renderCurrentStepView();
+            updateStepperUI();
+
+            if (scrollToTop) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // ==================== RENDERING ALL ORDERS ====================
+        function renderAllOrdersInConfirmation() {
+            const section = document.getElementById('step5-all-orders-section');
+            const countLabel = document.getElementById('step5-orders-count');
+            const list = document.getElementById('step5-orders-list');
+
+            if (!section || !list) return;
+
+            const orders = getOrders();
+            if (orders.length <= 1) {
+                section.classList.add('hidden');
+                return;
+            }
+
+            section.classList.remove('hidden');
+            if (countLabel) countLabel.textContent = `${orders.length} TOTAL DELIVERIES`;
+            list.innerHTML = '';
+
+            orders.forEach(ord => {
+                const isActive = ord.reference === activeOrderRef;
+                const card = document.createElement('div');
+                card.className = isActive
+                    ? "bg-surface-container-high border-2 border-primary-container p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg transition-all"
+                    : "bg-surface-container-low hover:bg-surface-container-high/80 border border-white/5 hover:border-primary/50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer transition-all";
+
+                const vImg = ord.vehicle?.image || 'Silver Electric Crossover in Dark Studio.png';
+                const vName = ord.vehicle?.name || 'Tesla';
+                const activeEmailList = (window.KineticCloud && window.KineticCloud.getActiveUserEmail ? window.KineticCloud.getActiveUserEmail() : localStorage.getItem('kinetic_user_email')) || '';
+                const isDiovList = activeEmailList.toLowerCase().includes('diovcarbonell');
+                const isVehiclePaid = ord.vehicle?.isPaid || (ord.vehicle?.price && String(ord.vehicle.price).includes('CLEARED')) || (isDiovList && vName.toLowerCase().includes('model y'));
+                const priceDisplayHtml = isVehiclePaid
+                    ? `<del class="line-through text-white/40 mr-1 font-normal text-[11px]">${ord.vehicle?.cancelledPrice || ord.vehicle?.originalPrice || '$61,000'}</del><span class="text-emerald-400 font-bold">CLEARED/PAID FOR</span>`
+                    : (ord.vehicle?.price || '$61,000');
+                const sDate = ord.schedule?.date || 'Confirmed';
+                const sTime = ord.schedule?.time || '';
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <img src="${vImg}" alt="${vName}" class="w-16 aspect-video object-cover bg-black border border-white/10" />
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="font-headline text-xs font-bold uppercase text-on-surface">${vName}</h4>
+                                <span class="bg-primary-container/20 text-primary font-mono text-[9px] font-bold px-2 py-0.5 uppercase tracking-wider">${ord.reference}</span>
+                                ${isActive ? '<span class="bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 uppercase tracking-wider">ACTIVE VIEW</span>' : ''}
+                            </div>
+                            <p class="text-[10px] text-on-surface-variant font-mono mt-0.5">${sDate} • ${sTime}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 self-end sm:self-auto">
+                        <span class="font-headline text-xs font-black text-primary-container">${priceDisplayHtml}</span>
+                        ${!isActive ? `
+                            <button type="button" onclick="viewOrderConfirmation('${ord.reference}')" class="px-3 py-1.5 bg-primary-container hover:bg-red-700 text-white font-headline text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center gap-1">
+                                <span>VIEW INFO</span>
+                                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+
+                if (!isActive) {
+                    card.onclick = (e) => {
+                        if (e.target.closest('button')) return;
+                        viewOrderConfirmation(ord.reference);
+                    };
+                }
+
+                list.appendChild(card);
+            });
+        }
+
+        function renderPastOrders() {
+            const section = document.getElementById('past-orders-section');
+            const countLabel = document.getElementById('past-orders-count');
+            const list = document.getElementById('past-orders-list');
+            const emptyActiveBanner = document.getElementById('cart-empty-active-delivery');
+
+            const orders = getOrders();
+
+            if (orders.length === 0) {
+                if (section) section.classList.add('hidden');
+                if (emptyActiveBanner) emptyActiveBanner.classList.add('hidden');
+                return;
+            }
+
+            // Hero banner in empty cart view
+            if (emptyActiveBanner) {
+                emptyActiveBanner.classList.remove('hidden');
+                const latest = orders[0];
+                const bannerImg = document.getElementById('empty-active-delivery-img');
+                const bannerName = document.getElementById('empty-active-delivery-name');
+                const bannerMeta = document.getElementById('empty-active-delivery-meta');
+
+                if (bannerImg) bannerImg.src = latest.vehicle?.image || 'cybertruck_home.jpg';
+                if (bannerName) bannerName.textContent = latest.vehicle?.name || 'Tesla';
+                if (bannerMeta) bannerMeta.textContent = `Ref: ${latest.reference} • Scheduled for ${latest.schedule?.date || 'Confirmed'} (${latest.schedule?.time || ''})`;
+            }
+
+            if (!section || !list) return;
+
+            section.classList.remove('hidden');
+            if (countLabel) countLabel.textContent = `${orders.length} SAVED`;
+            list.innerHTML = '';
+
+            orders.forEach(ord => {
+                const card = document.createElement('div');
+                card.className = "bg-surface-container-low hover:bg-surface-container-high border border-white/5 hover:border-primary/50 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all cursor-pointer shadow-md";
+
+                const vImg = ord.vehicle?.image || 'cybertruck_home.jpg';
+                const activeEmailPast = (window.KineticCloud && window.KineticCloud.getActiveUserEmail ? window.KineticCloud.getActiveUserEmail() : localStorage.getItem('kinetic_user_email')) || '';
+                const isDiovPast = activeEmailPast.toLowerCase().includes('diovcarbonell');
+                const isVehiclePaidPast = ord.vehicle?.isPaid || (ord.vehicle?.price && String(ord.vehicle.price).includes('CLEARED')) || (isDiovPast && vName.toLowerCase().includes('model y'));
+                const vPrice = isVehiclePaidPast
+                    ? `<del class="line-through text-white/40 mr-1 font-normal text-[11px]">${ord.vehicle?.cancelledPrice || ord.vehicle?.originalPrice || '$61,000'}</del><span class="text-emerald-400 font-bold">CLEARED/PAID FOR</span>`
+                    : (ord.vehicle?.price || '$61,000');
+                const sDate = ord.schedule?.date || 'Confirmed';
+                const sTime = ord.schedule?.time || '';
+                const locCity = ord.location?.city ? `${ord.location.city}, ${ord.location.state || ''}` : 'Regional Delivery Hub';
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <img src="${vImg}" alt="${vName}" class="w-20 aspect-video object-cover bg-black border border-white/10" />
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h4 class="font-headline text-sm font-bold uppercase text-on-surface">${vName}</h4>
+                                <span class="bg-primary-container/20 text-primary font-mono text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">${ord.reference}</span>
+                            </div>
+                            <p class="text-xs text-on-surface-variant font-mono mt-1 flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-xs text-primary">calendar_month</span>
+                                <span>${sDate} • ${sTime}</span>
+                            </p>
+                            <p class="text-[10px] text-on-surface-variant/60 font-body mt-0.5 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-xs">location_on</span>
+                                <span>${locCity}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:items-end justify-between gap-2 pt-3 sm:pt-0 border-t sm:border-t-0 border-white/5">
+                        <div class="flex items-baseline sm:justify-end gap-2">
+                            <span class="font-headline text-base font-black text-primary-container">${vPrice}</span>
+                            <span class="text-[9px] text-emerald-400 font-bold uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 border border-emerald-500/20">REGISTERED</span>
+                        </div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <button type="button" onclick="viewOrderConfirmation('${ord.reference}')" class="px-4 py-2 bg-primary-container hover:bg-red-700 text-white font-headline text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 shadow-md">
+                                <span>VIEW DELIVERY INFO</span>
+                                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                            </button>
+                            <button type="button" onclick="startReschedule('${ord.reference}', event)" title="Reschedule Date" class="p-2 border border-outline-variant/30 hover:border-primary text-on-surface hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-sm">event_repeat</span>
+                            </button>
+                            <button type="button" onclick="cancelOrderRegistration('${ord.reference}', event)" title="Cancel Order" class="p-2 border border-outline-variant/30 hover:border-error text-on-surface-variant hover:text-error transition-colors">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                card.onclick = (e) => {
+                    if (e.target.closest('button')) return;
+                    viewOrderConfirmation(ord.reference);
+                };
+
+                list.appendChild(card);
+            });
+        }
+
+        // ==================== RESCHEDULING & EDIT ACTIONS ====================
+        function startRescheduleCurrentDelivery() {
+            if (!activeOrderRef) return;
+            startReschedule(activeOrderRef);
+        }
+
+        function startReschedule(ref, event = null) {
+            if (event) event.stopPropagation();
+
+            const orders = getOrders();
+            const order = orders.find(o => o.reference === ref);
+            if (!order) return;
+
+            isRescheduling = true;
+            rescheduleRef = order.reference;
+            activeOrderRef = order.reference;
+
+            // Load order data into working deliveryState
+            deliveryState.vehicle = { ...order.vehicle };
+            deliveryState.location = { ...order.location };
+            deliveryState.details = { ...order.details };
+            deliveryState.schedule = { ...order.schedule };
+
+            // Set calendar month to order's appointment month if valid
+            if (order.schedule?.date) {
+                const [y, m] = order.schedule.date.split('-');
+                calYear = parseInt(y);
+                calMonth = parseInt(m) - 1;
+            }
+
+            const reschedBanner = document.getElementById('reschedule-mode-banner');
+            const reschedBannerRef = document.getElementById('reschedule-banner-ref');
+            if (reschedBanner) reschedBanner.classList.remove('hidden');
+            if (reschedBannerRef) reschedBannerRef.textContent = `Select a new appointment window for Reference #${order.reference}.`;
+
+            // Navigate to Step 4
+            deliveryState.currentStep = 4;
+            renderCurrentStepView();
+            updateStepperUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            showToast("Reschedule Window", "Pick a new delivery date and available time slot.", "calendar_month");
+        }
+
+        function cancelReschedule() {
+            isRescheduling = false;
+            rescheduleRef = null;
+            const reschedBanner = document.getElementById('reschedule-mode-banner');
+            if (reschedBanner) reschedBanner.classList.add('hidden');
+
+            const activeOrder = getActiveOrder();
+            if (activeOrder) {
+                viewOrderConfirmation(activeOrder);
+            } else {
+                switchToNewRegistrationView();
+            }
+        }
+
+        function startEditCurrentDeliveryDetails() {
+            const order = getActiveOrder();
+            if (!order) return;
+
+            isEditingDetails = true;
+            activeOrderRef = order.reference;
+
+            // Populate form inputs
+            deliveryState.vehicle = { ...order.vehicle };
+            deliveryState.location = { ...order.location };
+            deliveryState.details = { ...order.details };
+            deliveryState.schedule = { ...order.schedule };
+
+            restoreFormValues();
+
+            const editBanner = document.getElementById('edit-mode-banner');
+            const editBannerRef = document.getElementById('edit-banner-ref');
+            const saveEditBtn = document.getElementById('save-details-edit-btn');
+            if (editBanner) editBanner.classList.remove('hidden');
+            if (editBannerRef) editBannerRef.textContent = `Modifying fulfillment and customer details for Order #${order.reference}.`;
+            if (saveEditBtn) saveEditBtn.classList.remove('hidden');
+
+            // Navigate to Step 2
+            deliveryState.currentStep = 2;
+            renderCurrentStepView();
+            updateStepperUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            showToast("Edit Mode", "Update your location or contact info, then click Save & Return.", "edit_note");
+        }
+
+        function saveEditedDetails() {
+            if (!validateStep2()) {
+                deliveryState.currentStep = 2;
+                renderCurrentStepView();
+                updateStepperUI();
+                return;
+            }
+
+            // Sync from inputs
+            deliveryState.details.firstName = document.getElementById('det-first-name').value.trim() || deliveryState.details.firstName;
+            deliveryState.details.lastName = document.getElementById('det-last-name').value.trim() || deliveryState.details.lastName;
+            deliveryState.details.email = document.getElementById('det-email').value.trim() || deliveryState.details.email;
+            deliveryState.details.phone = document.getElementById('det-phone').value.trim() || deliveryState.details.phone;
+            deliveryState.details.dob = document.getElementById('det-dob').value.trim() || deliveryState.details.dob;
+            deliveryState.details.license = document.getElementById('det-license').value.trim() || deliveryState.details.license;
+
+            const orders = getOrders();
+            const targetIdx = orders.findIndex(o => o.reference === activeOrderRef);
+            if (targetIdx !== -1) {
+                orders[targetIdx].location = { ...deliveryState.location };
+                orders[targetIdx].details = { ...deliveryState.details };
+                orders[targetIdx].lastUpdated = new Date().toISOString();
+                saveOrders(orders);
+
+                isEditingDetails = false;
+                const editBanner = document.getElementById('edit-mode-banner');
+                const saveEditBtn = document.getElementById('save-details-edit-btn');
+                if (editBanner) editBanner.classList.add('hidden');
+                if (saveEditBtn) saveEditBtn.classList.add('hidden');
+
+                viewOrderConfirmation(orders[targetIdx]);
+                showToast("Details Updated", "Fulfillment location & contact information saved.");
+            }
+        }
+
+        function cancelEditDetails() {
+            isEditingDetails = false;
+            const editBanner = document.getElementById('edit-mode-banner');
+            const saveEditBtn = document.getElementById('save-details-edit-btn');
+            if (editBanner) editBanner.classList.add('hidden');
+            if (saveEditBtn) saveEditBtn.classList.add('hidden');
+
+            const activeOrder = getActiveOrder();
+            if (activeOrder) {
+                viewOrderConfirmation(activeOrder);
+            }
+        }
+
+        function copyRefToClipboard() {
+            const refText = document.getElementById('conf-ref-id').textContent.trim();
+            if (!refText) return;
+
+            navigator.clipboard.writeText(refText).then(() => {
+                showToast("Reference Copied", `#${refText} copied to clipboard!`, "content_copy");
+            }).catch(() => {
+                showToast("Reference ID", `#${refText}`, "info");
+            });
+        }
+
+        function cancelCurrentOrderRegistration() {
+            if (!activeOrderRef) return;
+            cancelOrderRegistration(activeOrderRef);
+        }
+
+        function cancelOrderRegistration(ref, event = null) {
+            if (event) event.stopPropagation();
+
+            const confirmed = window.confirm(`Are you sure you want to cancel delivery registration #${ref}?\n\nThis will remove the delivery hold and cannot be undone.`);
+            if (!confirmed) return;
+
+            let orders = getOrders();
+            orders = orders.filter(o => o.reference !== ref);
+            saveOrders(orders);
+
+            if (orders.length > 0) {
+                activeOrderRef = orders[0].reference;
+                updateViewTabsUI(orders);
+                viewOrderConfirmation(orders[0]);
+                renderPastOrders();
+                showToast("Registration Cancelled", `Delivery #${ref} has been removed.`, "delete");
+            } else {
+                activeOrderRef = null;
+                localStorage.removeItem('kineticActiveOrderId');
+                hideViewTabsUI();
+                loadCartData();
+                deliveryState.currentStep = 1;
+                renderCart();
+                renderPastOrders();
+                renderCurrentStepView();
+                updateStepperUI();
+                showToast("Registration Cancelled", `Delivery #${ref} has been removed.`, "delete");
+            }
+        }
+    </script>
+</body>
+
+</html>
